@@ -1,0 +1,109 @@
+# =========================================
+# Django / Python Gitignore Template
+# =========================================
+
+# --- Python cache & compiled files ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual environments ---
+venv/
+env/
+ENV/
+.venv/
+.env
+.env.bak
+
+# --- Django database ---
+db.sqlite3
+db.sqlite3-journal
+
+# --- Django static & media files ---
+/static/
+/staticfiles/
+/media/
+static_cdn/
+media_cdn/
+
+# --- Migrations (optional, keep if needed) ---
+# Uncomment if you don't want to push migration files
+# */migrations/
+# !*/migrations/__init__.py
+
+# --- Logs & reports ---
+*.log
+*.pot
+*.pycoverage
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+*.log
+*.out
+*.err
+
+# --- IDE files ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# --- System files ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# --- Build / distribution directories ---
+build/
+dist/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# --- Node / npm (if you use React, Tailwind, etc.) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# --- Temporary files ---
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+
+# --- PyCharm specific ---
+.idea/
+*.iml
+__pycache__/
+
+# --- Jupyter / notebooks ---
+.ipynb_checkpoints
+
+# --- SQLite / JSON data ---
+*.sqlite3
+*.json
+
+# --- Backup and test files ---
+*.old
+*.orig
+*.test
+*.sample
+
+# --- Local project configs ---
+local_settings.py
+settings_local.py
+
+# --- Media uploads (user files) ---
+uploads/
+user_uploads/
+
+# --- Env configuration files ---
+.env.example
+*.secret
+secrets.json
