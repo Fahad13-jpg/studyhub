@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h2 class="fw-bold">{{ group.name }}</h2>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-book me-2"></i>{{ group.course_name }} ({{ group.course_code }})
+                            </p>
+                        </div>
+                        <span class="badge bg-{% if group.group_type == 'public' %}success{% else %}warning{% endif %} fs-6">
+                            {{ group.get_group_type_display }}
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <h5 class="fw-bold mb-3">Description</h5>
+                    <p>{{ group.description }}</p>
+
+                    <h5 class="fw-bold mb-3 mt-4">Study Topics</h5>
+                    <p>{{ group.study_topics }}</p>
+
+                    <hr>
+
+                    <div class="row text-center mb-3">
+                        <div class="col-md-3 mb-3">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <p class="mb-0"><strong>{{ group.current_member_count }}/{{ group.max_capacity }}</strong></p>
+                            <small class="text-muted">Members</small>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <i class="fas fa-calendar fa-2x text-primary mb-2"></i>
+                            <p class="mb-0"><strong>{{ group.meeting_days }}</strong></p>
+                            <small class="text-muted">Days</small>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                            <p class="mb-0"><strong>{{ group.meeting_time|time:"g:i A" }}</strong></p>
+                            <small class="text-muted">Time</small>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary mb-2"></i>
+                            <p class="mb-0"><strong>{{ group.meeting_location }}</strong></p>
+                            <small class="text-muted">Location</small>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    {% if is_member %}
+                        <a href="{% url 'user_sessions:group_sessions' group.pk %}" class="btn btn-outline-success w-100 mb-2">
+                            <i class="fas fa-calendar-alt me-2"></i>View Sessions
+                        </a>
+                        <a href="{% url 'user_sessions:create_session' group.pk %}" class="btn btn-success w-100 mb-3">
+                            <i class="fas fa-calendar-plus me-2"></i>Create Session
+                        </a>
+                    {% endif %}
+
+                    {% if not is_member and not is_creator %}
+                        {% if not pending_request %}
+                            <a href="{% url 'groups:join_group' group.pk %}" class="btn btn-success w-100 mt-3">
+                                <i class="fas fa-user-plus me-2"></i>Join Group
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary w-100 mt-3" disabled>Request Pending</button>
+                        {% endif %}
+                    {% elif is_member and not is_creator %}
+                        <a href="{% url 'groups:leave_group' group.pk %}" class="btn btn-danger w-100 mt-3">
+                            <i class="fas fa-sign-out-alt me-2"></i>Leave Group
+                        </a>
+                    {% elif is_creator %}
+                        <a href="{% url 'groups:delete_group' group.pk %}" class="btn btn-danger w-100 mt-3" 
+                           onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash me-2"></i>Delete Group
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div class="card shadow-sm border-0 rounded-4 mt-3">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-calendar-alt me-2"></i>Upcoming Sessions</h5>
+                </div>
+                <div class="card-body">
+                    {% for session in upcoming_sessions %}
+                        <div class="border-bottom pb-2 mb-2 d-flex justify-content-between align-items-center">
+                            <a href="{% url 'user_sessions:session_detail' session.pk %}">
+                                {{ session.title }} - {{ session.date|date:"M d, Y" }} at {{ session.time|time:"g:i A" }}
+                            </a>
+                            {% if session.is_cancelled %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No upcoming sessions.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Past Sessions -->
+            <div class="card shadow-sm border-0 rounded-4 mt-3">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-history me-2"></i>Past Sessions</h5>
+                </div>
+                <div class="card-body">
+                    {% for session in past_sessions %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <a href="{% url 'user_sessions:session_detail' session.pk %}">
+                                {{ session.title }} - {{ session.date|date:"M d, Y" }} at {{ session.time|time:"g:i A" }}
+                            </a>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No past sessions.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Members Sidebar -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2"></i>Members</h5>
+                </div>
+                <div class="card-body">
+                    {% for member in group.members.all %}
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ member.profile.profile_picture.url }}" class="rounded-circle me-3" 
+                                 style="width: 40px; height: 40px; object-fit: cover;">
+                            <div>
+                                <p class="mb-0 fw-semibold">{{ member.get_full_name }}</p>
+                                <small class="text-muted">@{{ member.username }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if is_creator and pending_requests %}
+                <div class="card shadow-sm border-0 rounded-4 mt-3">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-clock me-2"></i>Pending Requests</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for req in pending_requests %}
+                            <div class="border-bottom pb-2 mb-2">
+                                <p class="mb-1 fw-semibold">{{ req.user.get_full_name }}</p>
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'groups:approve_request' req.pk %}" class="btn btn-sm btn-success">Approve</a>
+                                    <a href="{% url 'groups:reject_request' req.pk %}" class="btn btn-sm btn-danger">Reject</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

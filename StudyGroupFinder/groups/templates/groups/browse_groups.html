@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Study Groups{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-search me-2"></i>Browse Study Groups</h2>
+        <a href="{% url 'groups:create_group' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Create Group
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <form method="get" class="row g-3">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search by course name or code" value="{{ search }}">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="location" class="form-control" placeholder="Filter by location" value="{{ location }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-2"></i>Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for group in groups %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold">{{ group.name }}</h5>
+                            <span class="badge 
+                                {% if group.group_type == 'public' %}
+                                    bg-success
+                                {% else %}
+                                    bg-warning
+                                {% endif %}
+                            ">
+                                {{ group.get_group_type_display }}
+                            </span>
+                        </div>
+                        <p class="text-muted mb-2"><i class="fas fa-book me-2"></i>{{ group.course_code }}</p>
+                        <p class="small">{{ group.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between text-muted small mb-3">
+                            <span><i class="fas fa-users me-1"></i>{{ group.current_member_count }}/{{ group.max_capacity }}</span>
+                            <span><i class="fas fa-map-marker-alt me-1"></i>{{ group.meeting_location }}</span>
+                        </div>
+                        <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-outline-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4>No groups found</h4>
+                <p class="text-muted">Try adjusting your search filters</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

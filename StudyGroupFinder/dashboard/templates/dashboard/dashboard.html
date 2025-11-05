@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+{% load dashboard_extras %}
+
+{% block title %}Dashboard - StudyGroup Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- Welcome Section -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Welcome back, {{ user.get_full_name|default:user.username }}! 👋</h2>
+        <p class="text-muted">Here's what's happening with your study groups</p>
+    </div>
+
+    <!-- Quick Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-primary text-white">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_groups_joined }}</h3>
+                    <p class="mb-0">Groups Joined</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-success text-white">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-plus-circle fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_groups_created }}</h3>
+                    <p class="mb-0">Groups Created</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-warning text-white">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_sessions_attended }}</h3>
+                    <p class="mb-0">Sessions Attended</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-info text-white">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-calendar-alt fa-3x mb-3"></i>
+                    <h3 class="fw-bold">{{ total_sessions_scheduled }}</h3>
+                    <p class="mb-0">Total Sessions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Sessions This Week -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold">
+                    <i class="fas fa-calendar-week me-2 text-primary"></i>Upcoming Sessions This Week
+                </h4>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if upcoming_sessions %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Session</th>
+                                <th>Group</th>
+                                <th>Date & Time</th>
+                                <th>Location</th>
+                                <th>Your RSVP</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in upcoming_sessions %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ session.title }}</strong>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'groups:group_detail' session.group.pk %}" class="text-decoration-none">
+                                            {{ session.group.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-calendar me-1"></i>{{ session.date|date:"M d" }}<br>
+                                        <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ session.time|time:"g:i A" }}</small>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ session.location }}
+                                    </td>
+                                    <td>
+                                        {% if session.id in rsvp_dict %}
+                                            {% if rsvp_dict|get_item:session.id == 'attending' %}
+                                                <span class="badge bg-success">Attending</span>
+                                            {% elif rsvp_dict|get_item:session.id == 'maybe' %}
+                                                <span class="badge bg-warning">Maybe</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Cannot</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge bg-secondary">No RSVP</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'sessions:session_detail' session.pk %}" class="btn btn-sm btn-outline-primary">
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted mb-0">No upcoming sessions this week</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- My Active Groups -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-layer-group me-2 text-primary"></i>My Active Groups
+                        </h5>
+                        <a href="{% url 'groups:my_groups' %}" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if created_groups or joined_groups %}
+                        <!-- Created Groups -->
+                        {% if created_groups %}
+                            <h6 class="text-muted mb-3">Created by Me</h6>
+                            {% for group in created_groups %}
+                                <div class="border-bottom pb-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="fw-bold mb-1">{{ group.name }}</h6>
+                                            <p class="text-muted small mb-2">
+                                                <i class="fas fa-book me-1"></i>{{ group.course_code }}
+                                            </p>
+                                            <span class="badge bg-primary">Creator</span>
+                                            <span class="badge bg-light text-dark">
+                                                {{ group.current_member_count }}/{{ group.max_capacity }} members
+                                            </span>
+                                        </div>
+                                        <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-sm btn-outline-primary">
+                                            Manage
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- Joined Groups -->
+                        {% if joined_groups %}
+                            <h6 class="text-muted mb-3 mt-4">Joined Groups</h6>
+                            {% for group in joined_groups %}
+                                <div class="border-bottom pb-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="fw-bold mb-1">{{ group.name }}</h6>
+                                            <p class="text-muted small mb-2">
+                                                <i class="fas fa-book me-1"></i>{{ group.course_code }}
+                                            </p>
+                                            <span class="badge bg-light text-dark">
+                                                {{ group.current_member_count }}/{{ group.max_capacity }} members
+                                            </span>
+                                        </div>
+                                        <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-3">You haven't joined any groups yet</p>
+                            <a href="{% url 'groups:browse_groups' %}" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Browse Groups
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommended Groups -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="fas fa-star me-2 text-warning"></i>Recommended Groups
+                        </h5>
+                        <a href="{% url 'groups:browse_groups' %}" class="btn btn-sm btn-outline-primary">Browse All</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if recommended_groups %}
+                        {% for group in recommended_groups %}
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ group.name }}</h6>
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-book me-1"></i>{{ group.course_code }}
+                                        </p>
+                                        <p class="small text-muted mb-2">{{ group.description|truncatewords:10 }}</p>
+                                        <span class="badge bg-success">Public</span>
+                                        <span class="badge bg-light text-dark">
+                                            {{ group.member_count }}/{{ group.max_capacity }} members
+                                        </span>
+                                    </div>
+                                    <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-sm btn-success">
+                                        Join
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No recommended groups available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center py-4">
+            <h5 class="fw-bold mb-4">Quick Actions</h5>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{% url 'groups:create_group' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Group
+                </a>
+                <a href="{% url 'groups:browse_groups' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-search me-2"></i>Browse Groups
+                </a>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-user me-2"></i>View Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom template filter for dict access -->
+{% load static %}
+<script>
+// Add any custom JavaScript if needed
+</script>
+{% endblock %}

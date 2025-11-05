@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.name }} - Sessions{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold"><i class="fas fa-calendar-alt me-2"></i>Study Sessions</h2>
+            <p class="text-muted mb-0">{{ group.name }}</p>
+        </div>
+        {% if is_member %}
+            <a href="{% url 'user_sessions:create_session' group.pk %}" class="btn btn-success">
+                <i class="fas fa-plus-circle me-2"></i>Schedule Session
+            </a>
+        {% endif %}
+    </div>
+
+    <h4 class="mb-3 fw-bold">Upcoming Sessions</h4>
+    <div class="row mb-5">
+        {% for session in upcoming_sessions %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-2">{{ session.title }}</h5>
+                        <p class="text-muted small mb-3">{{ session.description|truncatewords:15 }}</p>
+                        
+                        <div class="d-flex justify-content-between text-muted small mb-3">
+                            <span><i class="fas fa-calendar me-1"></i>{{ session.date|date:"M d, Y" }}</span>
+                            <span><i class="fas fa-clock me-1"></i>{{ session.time|time:"g:i A" }}</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-success me-1">{{ session.attending_count }} attending</span>
+                                <span class="badge bg-warning">{{ session.maybe_count }} maybe</span>
+                            </div>
+                            <a href="{% url 'user_sessions:session_detail' session.pk %}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No upcoming sessions scheduled.</p>
+                    {% if is_member %}
+                        <a href="{% url 'user_sessions:create_session' group.pk %}" class="btn btn-success">
+                            <i class="fas fa-plus-circle me-2"></i>Schedule First Session
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if past_sessions %}
+        <h4 class="mb-3 fw-bold">Past Sessions</h4>
+        <div class="row">
+            {% for session in past_sessions %}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm border-0 rounded-4 opacity-75">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-2">{{ session.title }}</h5>
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span><i class="fas fa-calendar me-1"></i>{{ session.date|date:"M d, Y" }}</span>
+                                <span><i class="fas fa-clock me-1"></i>{{ session.time|time:"g:i A" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

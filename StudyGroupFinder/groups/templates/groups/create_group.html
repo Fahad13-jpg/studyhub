@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Study Group{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h3 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Create Study Group</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Group Name <span class="text-danger">*</span></label>
+                            {{ form.name }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Name <span class="text-danger">*</span></label>
+                                {{ form.course_name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Course Code <span class="text-danger">*</span></label>
+                                {{ form.course_code }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description <span class="text-danger">*</span></label>
+                            {{ form.description }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Study Topics <span class="text-danger">*</span></label>
+                            {{ form.study_topics }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Max Capacity <span class="text-danger">*</span></label>
+                                {{ form.max_capacity }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Meeting Time <span class="text-danger">*</span></label>
+                                {{ form.meeting_time }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Group Type <span class="text-danger">*</span></label>
+                                {{ form.group_type }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Meeting Days <span class="text-danger">*</span></label>
+                                {{ form.meeting_days }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Meeting Location <span class="text-danger">*</span></label>
+                                {{ form.meeting_location }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Create Group</button>
+                        <a href="{% url 'groups:my_groups' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
