@@ -23,6 +23,11 @@ def create_session(request, group_id):
             session.group = group
             session.created_by = request.user
             session.save()
+            
+            # Notify all group members
+            from notifications.utils import notify_session_created
+            notify_session_created(session)
+            
             messages.success(request, 'Study session created successfully!')
             return redirect('user_sessions:session_detail', pk=session.pk)
     else:

@@ -2,10 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q, Count
-from django.utils import timezone
 from .models import StudyGroup, GroupMember, JoinRequest
 from .forms import StudyGroupForm, JoinRequestForm
-from user_sessions.models import StudySession  # Assuming your session model is here
 
 @login_required
 def create_group(request):
@@ -31,20 +29,17 @@ def group_detail(request, pk):
     is_creator = group.creator == request.user
     pending_request = JoinRequest.objects.filter(user=request.user, group=group, status='pending').first()
     pending_requests = JoinRequest.objects.filter(group=group, status='pending') if is_creator else None
-
-    # Separate upcoming and past sessions
-    now = timezone.now()
-    upcoming_sessions = group.sessions.filter(date__gte=now.date(), is_cancelled=False).order_by('date', 'time')
-    past_sessions = group.sessions.filter(date__lt=now.date()).order_by('-date', '-time')
-
+    
+    # Track group view for recommendations
+    from recommendations.utils import track_group_view
+    track_group_view(request.user, group)
+    
     context = {
         'group': group,
         'is_member': is_member,
         'is_creator': is_creator,
         'pending_request': pending_request,
         'pending_requests': pending_requests,
-        'upcoming_sessions': upcoming_sessions,
-        'past_sessions': past_sessions,
     }
     return render(request, 'groups/group_detail.html', context)
 
@@ -55,10 +50,11 @@ def browse_groups(request):
     search = request.GET.get('search', '')
     location = request.GET.get('location', '')
     
+    # Track search query for recommendations
     if search:
-        groups = groups.filter(
-            Q(name__icontains=search) | Q(course_name__icontains=search) | Q(course_code__icontains=search)
-        )
+        from recommendations.utils import track_search
+        track_search(request.user, search)
+        groups = groups.filter(Q(name__icontains=search) | Q(course_name__icontains=search) | Q(course_code__icontains=search))
     if location:
         groups = groups.filter(meeting_location__icontains=location)
     
@@ -91,8 +87,16 @@ def join_group(request, pk):
     if group.group_type == 'public':
         GroupMember.objects.create(user=request.user, group=group)
         messages.success(request, 'You joined the group!')
+        
+        # Notify new member
+        from notifications.utils import notify_new_member
+        notify_new_member(group, request.user)
     else:
-        JoinRequest.objects.get_or_create(user=request.user, group=group)
+        join_request, created = JoinRequest.objects.get_or_create(user=request.user, group=group)
+        if created:
+            # Notify group creator about join request
+            from notifications.utils import notify_join_request
+            notify_join_request(join_request)
         messages.info(request, 'Join request sent!')
     
     return redirect('groups:group_detail', pk=pk)

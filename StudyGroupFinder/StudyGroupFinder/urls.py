@@ -28,6 +28,10 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('groups/', include('groups.urls')),
     path('user_sessions/', include('user_sessions.urls')),
+    path('chat/', include('chat.urls')),
+    path('recommendations/', include('recommendations.urls')),
+    path('notifications/', include('notifications.urls')),
+
 
 
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

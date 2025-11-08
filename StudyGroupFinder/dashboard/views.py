@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.db import models
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
 from django.db.models import Count, Q, F
@@ -28,23 +27,16 @@ def dashboard(request):
     ).select_related('group', 'created_by').order_by('date', 'time')[:10]
     
     # Get user's RSVP status for upcoming sessions
-    from user_sessions.models import SessionRSVP
     user_rsvps = SessionRSVP.objects.filter(
         user=user,
         session__in=upcoming_sessions
     ).values_list('session_id', 'status')
     rsvp_dict = dict(user_rsvps)
     
-    # Get recommended groups (public groups user hasn't joined)
-    recommended_groups = StudyGroup.objects.filter(
-        group_type='public'
-    ).exclude(
-        members=user
-    ).annotate(
-        member_count=Count('members')
-    ).filter(
-        member_count__lt=models.F('max_capacity')
-    ).order_by('-created_at')[:6]
+    # Get recommended groups (using smart recommendations)
+    from recommendations.utils import calculate_recommendations
+    recommendations_data = calculate_recommendations(user, limit=6)
+    recommended_groups = [rec['group'] for rec in recommendations_data]
     
     # Calculate statistics
     total_groups_joined = all_my_groups.count()

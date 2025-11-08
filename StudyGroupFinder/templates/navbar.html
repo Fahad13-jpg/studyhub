@@ -23,6 +23,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link px-3" href="{% url 'recommendations:recommendations_page' %}">
+                            <i class="fas fa-magic me-2"></i>Recommended
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link px-3" href="{% url 'groups:browse_groups' %}">
                             <i class="fas fa-compass me-2"></i>Discover
                         </a>
@@ -36,6 +41,17 @@
                 
                 <!-- Right Side Actions -->
                 <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <!-- Notifications Bell -->
+                    <li class="nav-item me-3">
+                        <a class="nav-link position-relative" href="{% url 'notifications:notifications_list' %}">
+                            <i class="fas fa-bell fa-lg"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                                  id="notificationBadge" style="display: none; font-size: 0.65rem;">
+                                0
+                            </span>
+                        </a>
+                    </li>
+                    
                     <!-- Create Group Button -->
                     <li class="nav-item me-2">
                         <a class="btn btn-create" href="{% url 'groups:create_group' %}">

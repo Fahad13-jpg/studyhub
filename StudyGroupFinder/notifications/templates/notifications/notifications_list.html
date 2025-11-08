@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - StudyHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-bell me-2 text-primary"></i>Notifications
+        </h2>
+        <div class="d-flex gap-2">
+            <a href="{% url 'notifications:notification_preferences' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-cog me-2"></i>Settings
+            </a>
+            <a href="{% url 'notifications:mark_all_as_read' %}" class="btn btn-primary">
+                <i class="fas fa-check-double me-2"></i>Mark All Read
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-3">
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'notifications:notifications_list' %}" 
+                   class="btn btn-sm {% if not filter_status and not filter_type %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    All
+                </a>
+                <a href="?status=unread" 
+                   class="btn btn-sm {% if filter_status == 'unread' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    Unread
+                </a>
+                <a href="?status=read" 
+                   class="btn btn-sm {% if filter_status == 'read' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    Read
+                </a>
+                <div class="vr"></div>
+                <a href="?type=session_reminder" 
+                   class="btn btn-sm {% if filter_type == 'session_reminder' %}btn-info{% else %}btn-outline-info{% endif %}">
+                    <i class="fas fa-calendar me-1"></i>Reminders
+                </a>
+                <a href="?type=join_request" 
+                   class="btn btn-sm {% if filter_type == 'join_request' %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                    <i class="fas fa-user-plus me-1"></i>Requests
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications List -->
+    {% if notifications %}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="list-group list-group-flush">
+                {% for notification in notifications %}
+                    <div class="list-group-item {% if not notification.is_read %}bg-light{% endif %} border-0 notification-item">
+                        <div class="d-flex align-items-start">
+                            <!-- Icon -->
+                            <div class="notification-icon me-3">
+                                {% if notification.notification_type == 'session_reminder' %}
+                                    <div class="icon-wrapper bg-info">
+                                        <i class="fas fa-calendar-alt text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'join_request' %}
+                                    <div class="icon-wrapper bg-warning">
+                                        <i class="fas fa-user-plus text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'request_approved' %}
+                                    <div class="icon-wrapper bg-success">
+                                        <i class="fas fa-check-circle text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'request_rejected' %}
+                                    <div class="icon-wrapper bg-danger">
+                                        <i class="fas fa-times-circle text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'new_member' %}
+                                    <div class="icon-wrapper bg-primary">
+                                        <i class="fas fa-user-check text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'session_created' %}
+                                    <div class="icon-wrapper bg-success">
+                                        <i class="fas fa-plus-circle text-white"></i>
+                                    </div>
+                                {% elif notification.notification_type == 'session_cancelled' %}
+                                    <div class="icon-wrapper bg-danger">
+                                        <i class="fas fa-ban text-white"></i>
+                                    </div>
+                                {% else %}
+                                    <div class="icon-wrapper bg-secondary">
+                                        <i class="fas fa-bell text-white"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <h6 class="mb-1 fw-bold">{{ notification.title }}</h6>
+                                    {% if not notification.is_read %}
+                                        <span class="badge bg-primary rounded-pill">New</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mb-2 text-muted">{{ notification.message }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="far fa-clock me-1"></i>
+                                        {{ notification.created_at|timesince }} ago
+                                    </small>
+                                    <div class="btn-group btn-group-sm">
+                                        {% if notification.action_url %}
+                                            <a href="{% url 'notifications:mark_as_read' notification.id %}" 
+                                               class="btn btn-outline-primary">
+                                                <i class="fas fa-eye me-1"></i>View
+                                            </a>
+                                        {% endif %}
+                                        {% if not notification.is_read %}
+                                            <a href="{% url 'notifications:mark_as_read' notification.id %}" 
+                                               class="btn btn-outline-success">
+                                                <i class="fas fa-check me-1"></i>Mark Read
+                                            </a>
+                                        {% endif %}
+                                        <a href="{% url 'notifications:delete_notification' notification.id %}" 
+                                           class="btn btn-outline-danger"
+                                           onclick="return confirm('Delete this notification?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                <h4 class="fw-bold mb-2">No Notifications</h4>
+                <p class="text-muted">You're all caught up! Check back later for updates.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .notification-item {
+        padding: 1.25rem;
+        transition: all 0.3s ease;
+    }
+    
+    .notification-item:hover {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%) !important;
+        transform: translateX(5px);
+    }
+    
+    .icon-wrapper {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}

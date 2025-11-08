@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Recommended Groups - StudyHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">
+                <i class="fas fa-magic me-2 text-warning"></i>Recommended for You
+            </h2>
+            <p class="text-muted mb-0">Personalized study groups based on your profile and interests</p>
+        </div>
+        <a href="?refresh=1" class="btn btn-outline-primary">
+            <i class="fas fa-sync-alt me-2"></i>Refresh
+        </a>
+    </div>
+
+    <!-- Recommendations Grid -->
+    {% if recommendations %}
+        <div class="row">
+            {% for rec in recommendations %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 recommendation-card">
+                        <!-- Match Score Badge -->
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                                <i class="fas fa-star me-1"></i>{{ rec.score|floatformat:0 }}% Match
+                            </span>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <!-- Group Type Badge -->
+                            {% if rec.group.group_type == 'public' %}
+                                <span class="badge bg-success mb-3">
+                                    {{ rec.group.get_group_type_display }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-info mb-3">
+                                    {{ rec.group.get_group_type_display }}
+                                </span>
+                            {% endif %}
+
+                            <!-- Group Name -->
+                            <h5 class="fw-bold mb-2">{{ rec.group.name }}</h5>
+                            
+                            <!-- Course Info -->
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-book me-2"></i>{{ rec.group.course_name }}
+                                <br>
+                                <small><strong>{{ rec.group.course_code }}</strong></small>
+                            </p>
+
+                            <!-- Description -->
+                            <p class="small text-muted mb-3">
+                                {{ rec.group.description|truncatewords:20 }}
+                            </p>
+
+                            <!-- Match Reasons -->
+                            <div class="mb-3">
+                                <h6 class="fw-bold small text-primary mb-2">
+                                    <i class="fas fa-lightbulb me-1"></i>Why this group?
+                                </h6>
+                                {% for reason in rec.reasons|slice:":3" %}
+                                    <div class="d-flex align-items-start mb-2">
+                                        <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                        <small class="text-muted">{{ reason }}</small>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Group Stats -->
+                            <div class="d-flex justify-content-between text-muted small mb-3">
+                                <span>
+                                    <i class="fas fa-users me-1"></i>
+                                    {{ rec.group.members.count }}/{{ rec.group.max_capacity }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-clock me-1"></i>
+                                    {{ rec.group.meeting_time|time:"g:i A" }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    {{ rec.group.meeting_location|truncatewords:2 }}
+                                </span>
+                            </div>
+
+                            <!-- Action Button -->
+                            <a href="{% url 'groups:group_detail' rec.group.pk %}" 
+                               class="btn btn-primary w-100">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- No Recommendations -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="fw-bold mb-3">No Recommendations Yet</h4>
+                <p class="text-muted mb-4">
+                    We need a bit more information to provide personalized recommendations.
+                </p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary">
+                        <i class="fas fa-user-edit me-2"></i>Complete Your Profile
+                    </a>
+                    <a href="{% url 'groups:browse_groups' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-search me-2"></i>Browse All Groups
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- How Recommendations Work -->
+    <div class="card border-0 shadow-sm rounded-4 mt-5 bg-light">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">
+                <i class="fas fa-info-circle me-2 text-primary"></i>How Recommendations Work
+            </h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-graduation-cap fa-2x text-primary me-3"></i>
+                        <div>
+                            <h6 class="fw-bold">Academic Match</h6>
+                            <small class="text-muted">Groups matching your department, semester, and courses</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-users fa-2x text-success me-3"></i>
+                        <div>
+                            <h6 class="fw-bold">Similar Students</h6>
+                            <small class="text-muted">Popular groups among students with similar profiles</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-history fa-2x text-warning me-3"></i>
+                        <div>
+                            <h6 class="fw-bold">Your Activity</h6>
+                            <small class="text-muted">Based on your searches and viewed groups</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .recommendation-card {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: visible;
+    }
+    
+    .recommendation-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3) !important;
+    }
+    
+    .recommendation-card .badge {
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}

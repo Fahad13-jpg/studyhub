@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'groups',
     'user_sessions',
     'dashboard',
+    'chat',
+    'recommendations',
+    'notifications',
 
 ]
 LOGIN_REDIRECT_URL = 'dashboard:dashboard'

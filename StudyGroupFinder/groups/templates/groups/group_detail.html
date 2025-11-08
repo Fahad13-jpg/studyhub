@@ -61,7 +61,10 @@
                         <a href="{% url 'user_sessions:create_session' group.pk %}" class="btn btn-success w-100 mb-3">
                             <i class="fas fa-calendar-plus me-2"></i>Create Session
                         </a>
-                    {% endif %}
+                        <a href="{% url 'chat:group_chat' group.pk %}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-comments me-2"></i>Group Chat
+                        </a>
+                        {% endif %}
 
                     {% if not is_member and not is_creator %}
                         {% if not pending_request %}
@@ -81,6 +84,7 @@
                             <i class="fas fa-trash me-2"></i>Delete Group
                         </a>
                     {% endif %}
+                    
                 </div>
             </div>
 
