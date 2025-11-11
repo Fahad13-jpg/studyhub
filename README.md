@@ -293,7 +293,6 @@ studyhub/
 ### Frontend
 
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
@@ -344,6 +343,43 @@ studyhub/
 <img src="data/images/chat.png" alt="Chat" width="800"/>
 
 *Real-time messaging within study groups*
+
+---
+
+### 👥 User Registeration
+<img src="data/images/register.png" alt="Chat" width="800"/>
+
+*User Registration*
+
+---
+
+### 💡 Groups Recommendations
+<img src="data/images/recommendations.png" alt="Chat" width="800"/>
+
+*Groups Recommendation*
+
+---
+
+### 🗓️ Session Creation
+<img src="data/images/user_sessions.png" alt="Chat" width="800"/>
+
+*Study Sessions Creation with-in Study groups*
+
+---
+
+### 🔔 App Notifications
+<img src="data/images/notifications.png" alt="Chat" width="800"/>
+
+*Notifications about session creation, group joins, join-requests etc*
+
+---
+
+### 👤 User Profiles
+<img src="data/images/profile.png" alt="Chat" width="800"/>
+
+*Edit profile information*
+
+---
 
 </details>
 
