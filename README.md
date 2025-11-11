@@ -13,8 +13,8 @@
 
 **[🚀 Live Demo](https://studyhub-demo.herokuapp.com)** • 
 **[📖 Documentation](https://docs.studyhub.com)** • 
-**[🐛 Report Bug](https://github.com/yourusername/studyhub/issues)** • 
-**[✨ Request Feature](https://github.com/yourusername/studyhub/issues)**
+**[🐛 Report Bug](https://github.com/Fahad13-jpg/studyhub/issues)** • 
+**[✨ Request Feature](https://github.com/Fahad13-jpg/studyhub/issues)**
 
 ---
 
@@ -138,7 +138,7 @@ Built with ❤️ using Django, Bootstrap 5, and modern web technologies.
 #### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/studyhub.git
+git clone https://github.com/Fahad13-jpg/studyhub.git
 cd studyhub
 ```
 
@@ -245,7 +245,7 @@ studyhub/
 │   ├── utils.py             # Recommendation algorithm
 │   └── views.py             # Recommendation views
 │
-├── 📁 sessions/              # Session scheduling
+├── 📁 user_sessions/              # Session scheduling
 │   ├── models.py            # Session & RSVP models
 │   ├── views.py             # Session management
 │   └── forms.py             # Session forms
@@ -260,10 +260,10 @@ studyhub/
 │
 ├── 📁 templates/             # Global templates
 │   ├── base.html
-│   ├── navbar.html
-│   └── home.html
+│   └── navbar.html
+│   
 │
-├── 📁 studygroup_platform/   # Main project settings
+├── 📁 StudyGroupFinder/   # Main project settings
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
@@ -288,7 +288,7 @@ studyhub/
 
 ![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ### Frontend
 
@@ -565,7 +565,7 @@ coverage html  # Generate HTML report
 ```bash
 python manage.py test accounts
 python manage.py test groups
-python manage.py test sessions
+python manage.py test user_sessions
 ```
 
 ### Run with verbose output
@@ -608,7 +608,7 @@ docker-compose up --build
 
 ### Manual Server
 ```bash
-gunicorn studygroup_platform.wsgi:application \
+gunicorn StudyGroupFinder.wsgi:application \
     --bind 0.0.0.0:8000 \
     --workers 3
 ```
@@ -625,10 +625,10 @@ gunicorn studygroup_platform.wsgi:application \
 
 We love contributions! ❤️
 
-[![Contributors](https://img.shields.io/github/contributors/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/graphs/contributors)
-[![Forks](https://img.shields.io/github/forks/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/network/members)
-[![Stars](https://img.shields.io/github/stars/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/stargazers)
-[![Issues](https://img.shields.io/github/issues/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/issues)
+[![Contributors](https://img.shields.io/github/contributors/Fahad13-jpg/studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks//studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/network/members)
+[![Stars](https://img.shields.io/github/stars/Fahad13-jpg/studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/stargazers)
+[![Issues](https://img.shields.io/github/issues/Fahad13-jpg/studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/issues)
 
 </div>
 
@@ -704,7 +704,7 @@ Special thanks to:
 - [Bootstrap](https://getbootstrap.com/) - Front-end framework
 - [Font Awesome](https://fontawesome.com/) - Icon library
 - [Chart.js](https://www.chartjs.org/) - Charts and graphs
-- All our amazing [contributors](https://github.com/yourusername/studyhub/graphs/contributors)
+- All our amazing [contributors](https://github.com/Fahad13-jpg/studyhub/graphs/contributors)
 
 </div>
 
