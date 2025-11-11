@@ -720,7 +720,7 @@ See [LICENSE](LICENSE) file for details.
 
 ### Contact
 
-📧 Email: [your.email@example.com](mailto:mohmmadfahad53408@gmail.com)
+📧 Email: [mohmmadfahad53408@gmail.com](mailto:mohmmadfahad53408@gmail.com)
 
 🔗 Project Link: [https://github.com/Fahad13-jpg/studyhub](https://github.com/Fahad13-jpg/studyhub)
 
