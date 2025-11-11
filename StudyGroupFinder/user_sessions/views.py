@@ -84,6 +84,13 @@ def rsvp_session(request, pk, status):
         defaults={'status': status}
     )
     
+    # Update gamification (streak and badges)
+    if status == 'attending':
+        from gamification.utils import update_user_streak, check_and_award_badges, award_points
+        update_user_streak(request.user)
+        check_and_award_badges(request.user)
+        award_points(request.user, 5, 'sessions')  # 5 points for attending
+    
     messages.success(request, f'RSVP updated to: {rsvp.get_status_display()}')
     return redirect('user_sessions:session_detail', pk=pk)
 
@@ -120,6 +127,11 @@ def cancel_session(request, pk):
     
     session.is_cancelled = True
     session.save()
+    
+    # Notify all group members
+    from notifications.utils import notify_session_cancelled
+    notify_session_cancelled(session)
+    
     messages.success(request, 'Session cancelled successfully.')
     return redirect('user_sessions:group_sessions', group_id=session.group.pk)
 

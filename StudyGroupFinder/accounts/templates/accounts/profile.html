@@ -1,9 +1,51 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load gamification_extras %}
 
 {% block title %}{{ profile_user.get_full_name|default:profile_user.username }} - Profile{% endblock %}
 
 {% block content %}
+<style>
+.badge-mini-container {
+    display: inline-block;
+}
+
+.badge-mini-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.25rem;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.badge-mini-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+/* Different badge colors */
+.badge-mini-icon:nth-child(2n) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.badge-mini-icon:nth-child(3n) {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+}
+
+.badge-mini-icon:nth-child(4n) {
+    background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+}
+
+.badge-mini-icon:nth-child(5n) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+</style>
 <div class="container mt-4 mb-5">
     <div class="row">
         <!-- Profile Card -->
@@ -150,6 +192,61 @@
                 </div>
             </div>
 
+            <!-- Achievements Section -->
+            <div class="card shadow-sm border-0 rounded-4 mt-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-trophy me-2 text-warning"></i>Achievements
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if is_own_profile %}
+                        {% get_user_badges profile_user as user_badges %}
+                        {% get_user_points profile_user as user_points %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-6 text-center">
+                                <h4 class="fw-bold text-primary">Level {{ user_points.level }}</h4>
+                                <small class="text-muted">{{ user_points.total_points }} points</small>
+                            </div>
+                            <div class="col-6 text-center">
+                                <h4 class="fw-bold text-warning">{{ user_badges.count }}</h4>
+                                <small class="text-muted">Badges Earned</small>
+                            </div>
+                        </div>
+                        
+                        {% if user_badges %}
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                {% for user_badge in user_badges %}
+                                    <div class="badge-mini-container">
+                                        <span class="badge-mini-icon" title="{{ user_badge.badge.name }}">
+                                            <i class="fas {{ user_badge.badge.icon }}"></i>
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-trophy me-2"></i>View All Achievements
+                                </a>
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center mb-3">No badges earned yet. Start participating!</p>
+                            <div class="text-center">
+                                <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-star me-2"></i>Earn Your First Badge
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-lock fa-2x text-muted mb-2"></i>
+                            <p class="text-muted mb-0">Achievements are private</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
             <!-- Groups Section -->
             <div class="card shadow-sm border-0 rounded-4 mt-4">
                 <div class="card-header bg-white border-0 py-3">
@@ -170,4 +267,25 @@
         </div>
     </div>
 </div>
+
+<style>
+.badge-mini-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.badge-mini-container:hover {
+    transform: scale(1.1);
+}
+.badge-mini-icon {
+    color: #ffc107;
+    font-size: 1.5rem;
+}
+</style>
 {% endblock %}

@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - {{ group.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">
+                <i class="fas fa-chart-line me-2 text-primary"></i>Analytics Dashboard
+            </h2>
+            <p class="text-muted mb-0">{{ group.name }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Group
+            </a>
+            <a href="{% url 'analytics:refresh_analytics' group.pk %}" class="btn btn-primary">
+                <i class="fas fa-sync-alt me-2"></i>Refresh Data
+            </a>
+        </div>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-gradient-primary text-white h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-users fa-3x mb-3 opacity-75"></i>
+                    <h3 class="fw-bold mb-2">{{ analytics.total_members }}</h3>
+                    <p class="mb-0">Total Members</p>
+                    <small class="opacity-75">
+                        <i class="fas fa-arrow-up me-1"></i>{{ analytics.member_growth_rate|floatformat:1 }}% growth
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-gradient-success text-white h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-calendar-check fa-3x mb-3 opacity-75"></i>
+                    <h3 class="fw-bold mb-2">{{ analytics.total_sessions }}</h3>
+                    <p class="mb-0">Total Sessions</p>
+                    <small class="opacity-75">{{ analytics.completed_sessions }} completed</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-gradient-warning text-white h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-percentage fa-3x mb-3 opacity-75"></i>
+                    <h3 class="fw-bold mb-2">{{ analytics.average_attendance_rate|floatformat:1 }}%</h3>
+                    <p class="mb-0">Avg Attendance</p>
+                    <small class="opacity-75">Across all sessions</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 bg-gradient-info text-white h-100">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-fire fa-3x mb-3 opacity-75"></i>
+                    <h3 class="fw-bold mb-2">{{ analytics.sessions_this_month }}</h3>
+                    <p class="mb-0">This Month</p>
+                    <small class="opacity-75">
+                        {% if analytics.sessions_last_month %}
+                            {% widthratio analytics.sessions_this_month analytics.sessions_last_month 100 %}% vs last month
+                        {% else %}
+                            First month
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-chart-line me-2 text-primary"></i>Attendance Trends</h5>
+                </div>
+                <div class="card-body"><canvas id="attendanceChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-calendar-alt me-2 text-success"></i>Session Frequency</h5>
+                </div>
+                <div class="card-body"><canvas id="sessionFrequencyChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-info"></i>Member Growth Over Time</h5>
+                </div>
+                <div class="card-body"><canvas id="memberGrowthChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Members -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-trophy me-2 text-warning"></i>Most Active Members</h5>
+                </div>
+                <div class="card-body">
+                    {% for member_data in top_members %}
+                        <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-3">
+                            <div class="position-relative me-3">
+                                {% if member_data.user.profile.profile_picture %}
+                                    <img src="{{ member_data.user.profile.profile_picture.url }}" 
+                                         class="rounded-circle"
+                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                         style="width: 50px; height: 50px;">
+                                        {{ member_data.user.first_name|first|upper }}
+                                    </div>
+                                {% endif %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">#{{ forloop.counter }}</span>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1 fw-bold">{{ member_data.user.get_full_name }}</h6>
+                                <div class="d-flex gap-3 text-muted small">
+                                    <span><i class="fas fa-calendar-check me-1"></i>{{ member_data.sessions_attended }} attended</span>
+                                    <span><i class="fas fa-plus-circle me-1"></i>{{ member_data.sessions_created }} created</span>
+                                    <span><i class="fas fa-comments me-1"></i>{{ member_data.messages_sent }} messages</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-primary fs-6">{{ member_data.activity_score }}</span>
+                                <small class="d-block text-muted">points</small>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted text-center py-3">No activity data yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- All Members -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-list me-2 text-secondary"></i>All Members Activity</h5>
+                </div>
+                <div class="card-body" style="max-height: 500px; overflow-y: auto;">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th class="text-center">Attended</th>
+                                    <th class="text-center">Created</th>
+                                    <th class="text-center">Messages</th>
+                                    <th class="text-center">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in all_members_activity %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if activity.user.profile.profile_picture %}
+                                                    <img src="{{ activity.user.profile.profile_picture.url }}" 
+                                                         class="rounded-circle me-2"
+                                                         style="width: 30px; height: 30px; object-fit: cover;">
+                                                {% else %}
+                                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
+                                                         style="width: 30px; height: 30px; font-size: 0.75rem;">
+                                                        {{ activity.user.first_name|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                                <span>{{ activity.user.get_full_name|default:activity.user.username }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">{{ activity.sessions_attended }}</td>
+                                        <td class="text-center">{{ activity.sessions_created }}</td>
+                                        <td class="text-center">{{ activity.messages_sent }}</td>
+                                        <td class="text-center"><span class="badge bg-primary">{{ activity.activity_score }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // ✅ Parse safely even if empty or null
+    const attendanceTrends = JSON.parse('{{ attendance_trends|escapejs }}' || '[]');
+    const memberGrowth = JSON.parse('{{ member_growth|escapejs }}' || '[]');
+    const sessionFrequency = JSON.parse('{{ session_frequency|escapejs }}' || '[]');
+
+    // Attendance Trends Chart
+    const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(attendanceCtx, {
+        type: 'line',
+        data: {
+            labels: attendanceTrends.map(d => d.date),
+            datasets: [{
+                label: 'Attendance Rate (%)',
+                data: attendanceTrends.map(d => d.rate),
+                borderColor: 'rgb(102, 126, 234)',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {responsive: true, scales: {y: {beginAtZero: true, max: 100}}}
+    });
+
+    // Session Frequency Chart
+    const sessionFreqCtx = document.getElementById('sessionFrequencyChart').getContext('2d');
+    new Chart(sessionFreqCtx, {
+        type: 'bar',
+        data: {
+            labels: sessionFrequency.map(d => d.month),
+            datasets: [{
+                label: 'Sessions',
+                data: sessionFrequency.map(d => d.count),
+                backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                borderColor: 'rgb(16, 185, 129)',
+                borderWidth: 2
+            }]
+        },
+        options: {responsive: true, scales: {y: {beginAtZero: true}}}
+    });
+
+    // Member Growth Chart
+    const memberGrowthCtx = document.getElementById('memberGrowthChart').getContext('2d');
+    new Chart(memberGrowthCtx, {
+        type: 'line',
+        data: {
+            labels: memberGrowth.map(d => d.month),
+            datasets: [{
+                label: 'Total Members',
+                data: memberGrowth.map(d => d.count),
+                borderColor: 'rgb(79, 172, 254)',
+                backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5
+            }]
+        },
+        options: {responsive: true, scales: {y: {beginAtZero: true}}}
+    });
+</script>
+
+<style>
+.bg-gradient-primary {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);}
+.bg-gradient-success {background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);}
+.bg-gradient-warning {background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);}
+.bg-gradient-info {background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);}
+</style>
+{% endblock %}

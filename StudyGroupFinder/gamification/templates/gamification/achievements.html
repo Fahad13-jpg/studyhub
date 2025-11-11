@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block title %}Achievements - StudyHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-trophy me-2 text-warning"></i>Achievements & Progress
+        </h2>
+        <p class="text-muted">Track your learning journey and earn rewards!</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <!-- Level & Points -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 level-card">
+                <div class="card-body text-center p-4">
+                    <div class="level-badge mb-3">
+                        <div class="level-circle">
+                            <span class="level-number">{{ points.level }}</span>
+                        </div>
+                    </div>
+                    <h5 class="fw-bold mb-2">Level {{ points.level }}</h5>
+                    <p class="text-muted mb-3">{{ points.total_points }} points</p>
+                    <div class="progress" style="height: 8px;">
+                        {% widthratio points.total_points 1 100 as progress_calc %}
+                        {% with remainder=progress_calc|add:"-100"|divisibleby:100 %}
+                        {% widthratio progress_calc 100 100 as progress_percent %}
+                        <div class="progress-bar bg-gradient-primary" style="width: {{ progress_percent }}%"></div>
+                        {% endwith %}
+                    </div>
+                    <small class="text-muted d-block mt-2">{{ points.points_to_next_level }} to next level</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Streak -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 streak-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-fire fa-3x mb-3 text-danger"></i>
+                    <h3 class="fw-bold mb-2">{{ streak.current_streak }}</h3>
+                    <p class="mb-2">Week Streak</p>
+                    <small class="text-muted">Longest: {{ streak.longest_streak }} weeks</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges Count -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 badges-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-medal fa-3x mb-3 text-warning"></i>
+                    <h3 class="fw-bold mb-2">{{ badges_count }}</h3>
+                    <p class="mb-2">Badges Earned</p>
+                    <small class="text-muted">{{ all_badges.count }} available</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions Attended -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100 sessions-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-calendar-check fa-3x mb-3 text-success"></i>
+                    <h3 class="fw-bold mb-2">{{ streak.total_sessions_attended }}</h3>
+                    <p class="mb-2">Sessions Attended</p>
+                    <small class="text-muted">Keep it up!</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earned Badges -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-trophy me-2 text-warning"></i>Your Badges
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            {% if earned_badges %}
+                <div class="row">
+                    {% for user_badge in earned_badges %}
+                        <div class="col-md-4 col-lg-3 mb-3">
+                            <div class="badge-card earned" style="border-color: {{ user_badge.badge.color }};">
+                                <div class="badge-icon" style="background: {{ user_badge.badge.color }};">
+                                    <i class="fas {{ user_badge.badge.icon }} fa-2x"></i>
+                                </div>
+                                <h6 class="fw-bold mt-3 mb-1">{{ user_badge.badge.name }}</h6>
+                                <p class="small text-muted mb-2">{{ user_badge.badge.description }}</p>
+                                <span class="badge bg-light text-dark">{{ user_badge.badge.tier|title }}</span>
+                                <small class="d-block text-muted mt-2">
+                                    <i class="far fa-calendar me-1"></i>{{ user_badge.earned_at|date:"M d, Y" }}
+                                </small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No badges earned yet. Start participating to earn your first badge!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- All Available Badges -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+            <h4 class="mb-0 fw-bold">
+                <i class="fas fa-list me-2 text-secondary"></i>All Available Badges
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                {% for badge in all_badges %}
+                    <div class="col-md-4 col-lg-3 mb-3">
+                        <div class="badge-card {% if badge.id not in earned_badge_ids %}locked{% endif %}" 
+                             style="border-color: {{ badge.color }};">
+                            <div class="badge-icon {% if badge.id not in earned_badge_ids %}locked{% endif %}" 
+                                 style="background: {{ badge.color }};">
+                                <i class="fas {{ badge.icon }} fa-2x"></i>
+                            </div>
+                            <h6 class="fw-bold mt-3 mb-1">{{ badge.name }}</h6>
+                            <p class="small text-muted mb-2">{{ badge.description }}</p>
+                            <span class="badge bg-light text-dark">{{ badge.tier|title }}</span>
+                            <div class="mt-2">
+                                <small class="text-muted">{{ badge.requirement_description }}</small>
+                            </div>
+                            {% if badge.id not in earned_badge_ids %}
+                                <div class="locked-overlay">
+                                    <i class="fas fa-lock fa-2x"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="text-center">
+        <a href="{% url 'gamification:leaderboard' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-ranking-star me-2"></i>View Leaderboard
+        </a>
+        <a href="{% url 'groups:browse_groups' %}" class="btn btn-outline-primary btn-lg">
+            <i class="fas fa-search me-2"></i>Join Groups to Earn More
+        </a>
+    </div>
+</div>
+
+<style>
+    .level-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .level-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        border: 4px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    
+    .level-number {
+        font-size: 2rem;
+        font-weight: 900;
+    }
+    
+    .badge-card {
+        border: 3px solid;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        background: white;
+        min-height: 250px;
+    }
+    
+    .badge-card.earned {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .badge-card.earned:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .badge-card.locked {
+        opacity: 0.6;
+        background: #f8f9fa;
+    }
+    
+    .badge-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .badge-icon.locked {
+        opacity: 0.5;
+        filter: grayscale(100%);
+    }
+    
+    .locked-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .streak-card, .badges-card, .sessions-card {
+        transition: all 0.3s ease;
+    }
+    
+    .streak-card:hover, .badges-card:hover, .sessions-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

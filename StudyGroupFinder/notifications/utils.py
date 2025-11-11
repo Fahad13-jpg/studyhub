@@ -129,7 +129,7 @@ def notify_session_created(session):
                 session=session,
                 group=session.group,
                 actor=session.created_by,
-                action_url=reverse('sessions:session_detail', kwargs={'pk': session.pk})
+                action_url=reverse('user_sessions:session_detail', kwargs={'pk': session.pk})
             )
 
 
