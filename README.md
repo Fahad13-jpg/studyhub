@@ -673,9 +673,9 @@ See [LICENSE](LICENSE) file for details.
 <table>
 <tr>
 <td align="center">
-<a href="https://github.com/yourusername">
-<img src="https://github.com/yourusername.png" width="100px;" alt="Your Name"/><br />
-<sub><b>Your Name</b></sub>
+<a href="https://github.com/Fahad13-jpg">
+<img src="https://github.com/Fahad13-jpg.png" width="100px;" alt="Your Name"/><br />
+<sub><b>Muhammad Fahad</b></sub>
 </a><br />
 <sub>Project Creator</sub>
 </td>
@@ -684,9 +684,9 @@ See [LICENSE](LICENSE) file for details.
 
 ### Contact
 
-📧 Email: [your.email@example.com](mailto:your.email@example.com)
+📧 Email: [your.email@example.com](mailto:mohmmadfahad53408@gmail.com)
 
-🔗 Project Link: [https://github.com/yourusername/studyhub](https://github.com/yourusername/studyhub)
+🔗 Project Link: [https://github.com/Fahad13-jpg/studyhub](https://github.com/Fahad13-jpg/studyhub)
 
 🌐 Live Demo: [https://studyhub-demo.herokuapp.com](https://studyhub-demo.herokuapp.com)
 
@@ -741,12 +741,12 @@ Special thanks to:
 
 <div align="center">
 
-[![Open Issues](https://img.shields.io/github/issues/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/issues)
-[![Closed Issues](https://img.shields.io/github/issues-closed/yourusername/studyhub?style=for-the-badge)](https://github.com/yourusername/studyhub/issues?q=is%3Aissue+is%3Aclosed)
+[![Open Issues](https://img.shields.io/github/issues/Fahad13-jpg/studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/issues)
+[![Closed Issues](https://img.shields.io/github/issues-closed/Fahad13-jpg/studyhub?style=for-the-badge)](https://github.com/Fahad13-jpg/studyhub/issues?q=is%3Aissue+is%3Aclosed)
 
 Currently, there are no known critical issues. 
 
-Found a bug? [Report it here](https://github.com/yourusername/studyhub/issues/new)
+Found a bug? [Report it here](https://github.com/Fahad13-jpg/studyhub/issues/new)
 
 </div>
 
@@ -782,13 +782,13 @@ Found a bug? [Report it here](https://github.com/yourusername/studyhub/issues/ne
 
 **If you found this project helpful, please consider giving it a ⭐**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/studyhub&type=Date)](https://star-history.com/#yourusername/studyhub&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Fahad13-jpg/studyhub&type=Date)](https://star-history.com/#Fahad13-jpg/studyhub&Date)
 
 ---
 
 ### 💝 Support the Project
 
-<a href="https://www.buymeacoffee.com/yourusername" target="_blank">
+<a href="https://www.buymeacoffee.com/Fahad13-jpg" target="_blank">
 <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="200"/>
 </a>
 
