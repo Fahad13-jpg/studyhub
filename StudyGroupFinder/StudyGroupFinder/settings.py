@@ -24,8 +24,13 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # ------------------------------------------------------------------
 # Allowed Hosts
 # ------------------------------------------------------------------
-ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = [
+    '.vercel.app', 
+    '.now.sh', 
+    'localhost', 
+    '127.0.0.1',
+    'study-group-finder-ousigqysn-fahad13-jpgs-projects.vercel.app'
+]
 CSRF_TRUSTED_ORIGINS = [
     'https://*.vercel.app',
     'https://*.now.sh'
