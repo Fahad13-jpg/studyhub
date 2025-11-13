@@ -67,14 +67,14 @@
                     <!-- User Profile Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle user-dropdown d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <div class="user-avatar">
-                                {% if user.profile.profile_picture %}
-                                    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        {{ user.first_name|first|upper|default:user.username|first|upper }}
-                                    </div>
-                                {% endif %}
+                            {% if user.profile.profile_picture %}
+    <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}">
+{% else %}
+    <div class="avatar-placeholder">
+        {{ user.first_name|first|upper|default:user.username|first|upper }}
+    </div>
+{% endif %}
+
                             </div>
                             <span class="ms-2 d-none d-lg-inline">{{ user.first_name|default:user.username }}</span>
                         </a>
