@@ -10,6 +10,8 @@ from urllib.parse import urlparse, parse_qsl
 # Load environment variables from .env file
 load_dotenv()
 
+
+
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,11 +24,12 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # ------------------------------------------------------------------
 # Allowed Hosts
 # ------------------------------------------------------------------
-ALLOWED_HOSTS = os.getenv(
-    'ALLOWED_HOSTS',
-    '127.0.0.1,localhost,studyhub.vercel.app'
-).split(',')
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+    'https://*.now.sh'
+]
 # ------------------------------------------------------------------
 # Application definition
 # ------------------------------------------------------------------
