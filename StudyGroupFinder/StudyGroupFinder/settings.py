@@ -4,25 +4,32 @@ Django settings for StudyGroupFinder project.
 
 import os
 from pathlib import Path
-from decouple import config
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ✅ SECRET KEY (load from environment variable or fallback)
-SECRET_KEY = os.environ.get('SECRET_KEY', '_ojx++7g25ct5+73m$0t&&_+hlsam9tdy7q$#7#%0i69kf+1r&')
+# ------------------------------------------------------------------
+# Secret Key & Debug
+# ------------------------------------------------------------------
+SECRET_KEY = os.getenv('SECRET_KEY', '_ojx++7g25ct5+73m$0t&&_+hlsam9tdy7q$#7#%0i69kf+1r&')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# ✅ DEBUG MODE (turn off in production)
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
-# ✅ Allowed hosts for Render deployment
-# Example: "studyhub-demo.onrender.com"
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost,studyhub-demo.onrender.com').split(',')
+# ------------------------------------------------------------------
+# Allowed Hosts
+# ------------------------------------------------------------------
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    '127.0.0.1,localhost,your-vercel-project-name.vercel.app'
+).split(',')
 
 # ------------------------------------------------------------------
 # Application definition
 # ------------------------------------------------------------------
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,14 +54,12 @@ INSTALLED_APPS = [
     'gamification',
 ]
 
-# Crispy forms setup
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # ------------------------------------------------------------------
 # Authentication redirects
 # ------------------------------------------------------------------
-
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'dashboard:dashboard'
 LOGOUT_REDIRECT_URL = 'accounts:login'
@@ -62,10 +67,9 @@ LOGOUT_REDIRECT_URL = 'accounts:login'
 # ------------------------------------------------------------------
 # Middleware
 # ------------------------------------------------------------------
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ for static files on Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ Serve static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -94,20 +98,35 @@ TEMPLATES = [
 WSGI_APPLICATION = 'StudyGroupFinder.wsgi.application'
 
 # ------------------------------------------------------------------
-# Database (SQLite for now)
+# Database configuration
 # ------------------------------------------------------------------
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DATABASE_URL:
+    tmpPostgres = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': tmpPostgres.path[1:],   # remove leading '/'
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': tmpPostgres.port or 5432,
+            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),
+        }
     }
-}
+else:
+    # Fallback to local SQLite for development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # ------------------------------------------------------------------
 # Password Validation
 # ------------------------------------------------------------------
-
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -118,7 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------
 # Internationalization
 # ------------------------------------------------------------------
-
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -127,7 +145,6 @@ USE_TZ = True
 # ------------------------------------------------------------------
 # Static and Media files
 # ------------------------------------------------------------------
-
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -138,5 +155,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # ------------------------------------------------------------------
 # Default Primary Key
 # ------------------------------------------------------------------
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
