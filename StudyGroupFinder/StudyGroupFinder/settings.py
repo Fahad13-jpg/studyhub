@@ -24,7 +24,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # ------------------------------------------------------------------
 ALLOWED_HOSTS = os.getenv(
     'ALLOWED_HOSTS',
-    '127.0.0.1,localhost,your-vercel-project-name.vercel.app'
+    '127.0.0.1,localhost,studyhub.vercel.app'
 ).split(',')
 
 # ------------------------------------------------------------------
