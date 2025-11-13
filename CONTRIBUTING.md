@@ -4,7 +4,7 @@ First off, thank you for considering contributing to StudyHub! It's people like 
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to [contact@studyhub.com](mailto:contact@studyhub.com).
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to [contact@studyhub.com](mailto:mohmmadfahad53408@gmail.com).
 
 ## How Can I Contribute?
 
@@ -44,9 +44,9 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 Fork the project on GitHub and clone your fork locally:
 
 ```bash
-git clone https://github.com/your-username/studyhub.git
+git clone https://github.com/Fahad13-jpg/studyhub.git
 cd studyhub
-git remote add upstream https://github.com/original-owner/studyhub.git
+git remote add upstream https://github.com/Fahad13-jpg/studyhub.git
 ```
 
 ### 2. Create a Branch
