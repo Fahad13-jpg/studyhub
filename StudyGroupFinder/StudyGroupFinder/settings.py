@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Secret Key & Debug
 # ------------------------------------------------------------------
 SECRET_KEY = os.getenv('SECRET_KEY', '_ojx++7g25ct5+73m$0t&&_+hlsam9tdy7q$#7#%0i69kf+1r&')
-DEBUG = os.getenv('DEBUG', 'False') == 'False'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ------------------------------------------------------------------
 # Allowed Hosts
