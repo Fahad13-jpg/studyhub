@@ -11,7 +11,7 @@
 
 <img src="data/images/banner.png" alt="StudyHub Banner" width="800"/>
 
-**[🚀 Live Demo](https://studyhub-demo.herokuapp.com)** • 
+**[🚀 Live Demo](https://studyhub-vq8j.vercel.app)** • 
 **[📖 Documentation](https://docs.studyhub.com)** • 
 **[🐛 Report Bug](https://github.com/Fahad13-jpg/studyhub/issues)** • 
 **[✨ Request Feature](https://github.com/Fahad13-jpg/studyhub/issues)**
@@ -205,80 +205,148 @@ python manage.py runserver
 ## 📂 Project Structure
 
 ```
-studyhub/
+STUDYHUB/
 │
-├── 📁 accounts/              # User authentication & profiles
-│   ├── models.py            # User profile model
-│   ├── views.py             # Authentication views
-│   ├── forms.py             # Registration & profile forms
-│   └── templates/           # Auth templates
+├── 📁 data/                     # Data files
 │
-├── 📁 analytics/             # Analytics & insights
-│   ├── models.py            # Analytics models
-│   ├── utils.py             # Analytics calculations
-│   └── views.py             # Dashboard views
+├── 📁 StudyGroupFinder/         # Main Django project
+│   ├── 📁 accounts/             # User authentication & profiles
+│   │   ├── migrations/          # Database migrations
+│   │   ├── templates/           # Auth templates
+│   │   ├── templatetags/        # Custom template tags
+│   │   ├── admin.py             # Admin configuration
+│   │   ├── apps.py              # App configuration
+│   │   ├── forms.py             # Registration & profile forms
+│   │   ├── models.py            # User profile model
+│   │   ├── urls.py              # URL routing
+│   │   └── views.py             # Authentication views
+│   │
+│   ├── 📁 analytics/            # Analytics & insights
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py            # Analytics models
+│   │   ├── urls.py
+│   │   ├── utils.py             # Analytics calculations
+│   │   └── views.py             # Dashboard views
+│   │
+│   ├── 📁 chat/                 # Group messaging system
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── forms.py             # Message forms
+│   │   ├── models.py            # Message models
+│   │   ├── urls.py
+│   │   └── views.py             # Chat functionality
+│   │
+│   ├── 📁 dashboard/            # User dashboard
+│   │   ├── templates/
+│   │   ├── apps.py
+│   │   ├── urls.py
+│   │   └── views.py             # Dashboard logic
+│   │
+│   ├── 📁 env/                  # Virtual environment (not in git)
+│   │
+│   ├── 📁 gamification/         # Badges, streaks, achievements
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── templatetags/        # Custom filters
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py            # Badge & streak models
+│   │   ├── urls.py
+│   │   ├── utils.py             # Gamification logic
+│   │   └── views.py             # Achievement views
+│   │
+│   ├── 📁 groups/               # Study group management
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── forms.py             # Group forms
+│   │   ├── models.py            # Group models
+│   │   ├── urls.py
+│   │   └── views.py             # Group CRUD operations
+│   │
+│   ├── 📁 media/                # User uploaded files
+│   │   └── profile_pictures/   # Profile images
+│   │
+│   ├── 📁 notifications/        # Notification system
+│   │   ├── management/          # Management commands
+│   │   │   └── commands/
+│   │   │       └── send_session_reminders.py
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py            # Notification models
+│   │   ├── urls.py
+│   │   ├── utils.py             # Notification helpers
+│   │   └── views.py             # Notification views
+│   │
+│   ├── 📁 recommendations/      # Smart recommendations
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py            # Recommendation models
+│   │   ├── urls.py
+│   │   ├── utils.py             # Recommendation algorithm
+│   │   └── views.py             # Recommendation views
+│   │
+│   ├── 📁 static/               # Static files (CSS, JS, images)
+│   │   ├── css/
+│   │   │   └── custom.css       # Custom styles
+│   │   ├── js/
+│   │   │   └── custom.js        # Custom JavaScript
+│   │   └── images/
+│   │       ├── default-avatar.png
+│   │       └── logo.png
+│   │
+│   ├── 📁 StudyGroupFinder/    # Main project settings
+│   │   ├── __init__.py
+│   │   ├── asgi.py              # ASGI configuration
+│   │   ├── settings.py          # Django settings
+│   │   ├── urls.py              # Main URL routing
+│   │   └── wsgi.py              # WSGI configuration
+│   │
+│   ├── 📁 templates/            # Global templates
+│   │   ├── base.html            # Base template
+│   │   └── navbar.html          # Navigation bar
+│   │
+│   ├── 📁 user_sessions/        # Session scheduling
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── forms.py             # Session forms
+│   │   ├── models.py            # Session & RSVP models
+│   │   ├── urls.py
+│   │   └── views.py             # Session management
+│   │
+│   ├── 📄 manage.py             # Django management script
+│   ├── 📄 db.sqlite3            # SQLite database (development)
+│   └── 📄 db_backup.sqlite3     # Database backup
 │
-├── 📁 chat/                  # Group messaging
-│   ├── models.py            # Message models
-│   └── views.py             # Chat views
-│
-├── 📁 dashboard/             # User dashboard
-│   └── views.py             # Dashboard logic
-│
-├── 📁 gamification/          # Badges, streaks, achievements
-│   ├── models.py            # Badge & streak models
-│   ├── utils.py             # Gamification logic
-│   └── views.py             # Achievement views
-│
-├── 📁 groups/                # Study group management
-│   ├── models.py            # Group models
-│   ├── views.py             # Group CRUD operations
-│   └── forms.py             # Group forms
-│
-├── 📁 notifications/         # Notification system
-│   ├── models.py            # Notification models
-│   ├── utils.py             # Notification helpers
-│   └── views.py             # Notification views
-│
-├── 📁 recommendations/       # Smart recommendations
-│   ├── models.py            # Recommendation models
-│   ├── utils.py             # Recommendation algorithm
-│   └── views.py             # Recommendation views
-│
-├── 📁 user_sessions/              # Session scheduling
-│   ├── models.py            # Session & RSVP models
-│   ├── views.py             # Session management
-│   └── forms.py             # Session forms
-│
-├── 📁 static/                # Static files (CSS, JS, images)
-│   ├── css/
-│   ├── js/
-│   └── images/
-│
-├── 📁 media/                 # User uploads
-│   └── profile_pictures/
-│
-├── 📁 templates/             # Global templates
-│   ├── base.html
-│   └── navbar.html
-│   
-│
-├── 📁 StudyGroupFinder/   # Main project settings
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── 📄 manage.py
-├── 📄 requirements.txt
-├── 📄 .env.example
-├── 📄 .gitignore
-├── 📄 Procfile              # Heroku deployment
-├── 📄 Dockerfile            # Docker support
-├── 📄 docker-compose.yml    # Docker composition
-└── 📄 README.md
+├── 📄 .env                      # Environment variables (not in git)
+├── 📄 .env.example              # Environment template
+├── 📄 .gitattributes            # Git attributes
+├── 📄 .gitignore                # Git ignore rules
+├── 📄 build_files.sh            # Build script for deployment
+├── 📄 CHANGELOG.md              # Version history
+├── 📄 CONTRIBUTING.md           # Contribution guidelines
+├── 📄 DEPLOYMENT.md             # Deployment guide
+├── 📄 Dockerfile                # Docker configuration
+├── 📄 LICENSE                   # MIT License
+├── 📄 manage.py                 # Django management (if at root)
+├── 📄 Procfile                  # Heroku deployment config
+├── 📄 README.md                 # Project documentation
+├── 📄 requirements.txt          # Python dependencies
+├── 📄 runtime.txt               # Python version (Heroku)
+└── 📄 vercel.json               # Vercel deployment config
 ```
-
----
 
 ## 🛠️ Technology Stack
 
@@ -288,7 +356,7 @@ studyhub/
 
 ![Django](https://img.shields.io/badge/Django-4.2-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 
 ### Frontend
 
@@ -724,7 +792,7 @@ See [LICENSE](LICENSE) file for details.
 
 🔗 Project Link: [https://github.com/Fahad13-jpg/studyhub](https://github.com/Fahad13-jpg/studyhub)
 
-🌐 Live Demo: [https://studyhub-demo.herokuapp.com](https://studyhub-demo.herokuapp.com)
+🌐 Live Demo: [https://studyhub-vq8j.vercel.app/](https://studyhub-vq8j.vercel.app/)
 
 </div>
 
