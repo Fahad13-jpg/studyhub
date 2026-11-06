@@ -22,6 +22,7 @@ from django.shortcuts import redirect
 
 
 urlpatterns = [
+    path('lead-gen/', include('StudyGroupFinder.lead_gen_policy_urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', lambda request: redirect('dashboard:dashboard')),  # Redirect root to dashboard

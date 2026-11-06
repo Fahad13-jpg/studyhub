@@ -1,0 +1,29 @@
+{% extends 'lead_gen/base.html' %}
+{% block title %}Privacy policy{% endblock %}
+{% block content %}
+<h1>Lead-Gen-system privacy policy</h1>
+<p><small>Effective date: 6 November 2026</small></p>
+<p>Lead-Gen-system is a business lead gathering, management and outreach project operated by Muhammad Fahad. This policy covers information handled by that project, including its Meta app named Lead-Gen-system.</p>
+<p class="note">The project is under development. A configured integration does not mean a channel is publicly available or that outreach has been authorized. Some features require a connected provider account, an approved campaign and recipient permission.</p>
+<h2>Information we process</h2>
+<ul>
+<li>Organization and campaign information supplied by customers: account identifiers, sender details, product descriptions, approved claims, templates, preferences, approvals and spending limits.</li>
+<li>Business lead information from enabled sources: business names, categories, locations, public websites, business contact details, public profile links, and supporting research/evidence.</li>
+<li>Connected-provider credentials and account identifiers needed to perform authorized integrations. Credentials are kept separate from public policy pages and are not published in message drafts.</li>
+<li>Communication records for enabled channels: recipients, message content, provider message identifiers, timestamps, delivery information, replies, opt-outs, and consent records. Call-related information may be processed when calling is separately enabled and authorized.</li>
+<li>Operational information needed to troubleshoot and protect the service, such as workflow status, errors and access records. Providers and hosting services may also maintain their own technical logs.</li>
+</ul>
+<h2>Why we use information</h2>
+<p>We use this information to gather and organize business leads, avoid duplicates, assess contact quality, collect supporting evidence, prepare personalized campaign drafts, operate approved outreach, detect replies, honor opt-outs, enforce organization boundaries and budgets, and investigate failures. Publicly available contact information alone is not treated as WhatsApp marketing consent.</p>
+<h2>Meta and WhatsApp information</h2>
+<p>When WhatsApp is connected, we use authorized business account and phone-number identifiers, approved templates, and signed webhook events to support messaging and status tracking. Incoming messages may contain a person's phone number, profile information and message content. They are used for the relevant organization and conversation, including stopping follow-ups after a reply or opt-out. Meta permissions are used for the authorized integration, not for unrelated access to a person's Facebook activity.</p>
+<h2>Service providers and AI</h2>
+<p>Data is shared with providers only as needed for an enabled function. These may include Meta for WhatsApp, Google for Gmail or Calendar, Apify for collection, Groq for AI-assisted research or strategy drafts, an email verification provider when enabled, and Retell when calling is enabled. Selected lead evidence and campaign details may be sent to the configured AI provider to generate drafts or summaries. Provider policies also apply to their processing.</p>
+<p>n8n and PostgreSQL support workflow processing and storage. This policy website is hosted on Vercel. Temporary development webhook tests may use a tunnel provider, which transports callback requests. Integrations should not receive unrelated organization data or authentication secrets in AI prompts.</p>
+<h2>Access, storage and retention</h2>
+<p>Access is intended to be scoped to the relevant organization and authorized operators. We use credential separation, approval checks and webhook signature validation where implemented. No system can guarantee absolute security.</p>
+<p>Retention depends on the record type, enabled provider and operational needs; the development system does not currently offer one universal automatic deletion period. Records and backups may remain until reviewed or removed. Opt-out/suppression information may need to be retained to prevent further unwanted contact. Provider-held copies and logs are subject to their own retention arrangements.</p>
+<h2>Your requests and choices</h2>
+<p>You can request information about your data, corrections, disconnection of an integration, or deletion by emailing the contact below. We may ask for limited information to verify the request and locate the correct organization or communication. Do not send passwords or API tokens. Business customers are responsible for their lawful use of lead data and obtaining the permissions required for their campaigns.</p>
+<p>For the request process, see our <a href="{% url 'lead_gen_policies:data_deletion' %}">data deletion instructions</a>. This project is not intended for children, and we do not intentionally solicit children's personal information. We may update this policy as the project changes and will update the effective date on this page.</p>
+{% endblock %}
