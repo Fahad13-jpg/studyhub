@@ -1,0 +1,29 @@
+{% extends 'lead_gen/base.html' %}
+{% block title %}Connect WhatsApp{% endblock %}
+{% block content %}
+<style>
+  .connection-heading { font-family: Georgia, serif; font-weight: 400; letter-spacing: -.035em; margin-bottom: 12px; }
+  .connection-intro { color: #4e5b6d; max-width: 54ch; }
+  .connection-status { margin-top: 28px; border: 1px solid #dce2e9; border-top: 4px solid #1753a1; border-radius: 8px; padding: 22px; }
+  .connection-label { margin: 0; font-size: .8rem; font-weight: 700; color: #1753a1; letter-spacing: .03em; }
+  .connection-status h2 { margin-top: 10px; }
+  .connection-button { border: 1px solid #c5cdd7; border-radius: 6px; background: #edf0f4; color: #536174; padding: 12px 18px; font: inherit; font-weight: 600; }
+  .connection-list { padding-left: 22px; }
+</style>
+<h1 class="connection-heading">Connect your business WhatsApp</h1>
+<p class="connection-intro">Use your organization's own WhatsApp Business account with Lead-Gen-system. You keep control of the account and the messages your team approves.</p>
+<section class="connection-status" aria-labelledby="setup-heading">
+  <p class="connection-label">SETUP IN PROGRESS</p>
+  <h2 id="setup-heading">Workspace sign-in is required</h2>
+  <p id="connection-help">Account connection is not available yet. Organization sign-in and secure account linking must be connected before you can continue.</p>
+  <button class="connection-button" type="button" disabled aria-describedby="connection-help">Connect WhatsApp</button>
+  <p><small>No account has been connected from this page. It does not collect passwords, access tokens or verification codes, and it does not send messages.</small></p>
+</section>
+<h2>When connection is available</h2>
+<ul class="connection-list">
+  <li>Sign in to your Lead-Gen-system workspace.</li>
+  <li>Choose your business account and number through Meta.</li>
+  <li>Review the connection before preparing an outreach campaign.</li>
+</ul>
+<p>Connecting an account will not approve a campaign or start sending messages. Read our <a href="{% url 'lead_gen_policies:privacy' %}">privacy policy</a> and <a href="{% url 'lead_gen_policies:data_deletion' %}">data deletion instructions</a>.</p>
+{% endblock %}
