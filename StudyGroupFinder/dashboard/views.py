@@ -9,50 +9,50 @@ from user_sessions.models import StudySession, SessionRSVP
 def dashboard(request):
     """Personalized dashboard for logged-in users"""
     user = request.user
-    
+
     # Get user's groups
-    created_groups = user.created_groups.all()
-    joined_groups = user.joined_groups.exclude(creator=user)
+    created_groups = user.created_groups.annotate(member_total=Count('members', distinct=True))
+    joined_groups = StudyGroup.objects.filter(pk__in=user.joined_groups.values('pk')).exclude(creator=user).annotate(member_total=Count('members', distinct=True))
     all_my_groups = user.joined_groups.all()
-    
+
     # Get upcoming sessions for current week
     today = datetime.now().date()
     week_end = today + timedelta(days=7)
-    
+
     upcoming_sessions = StudySession.objects.filter(
         group__in=all_my_groups,
         date__gte=today,
         date__lte=week_end,
         is_cancelled=False
     ).select_related('group', 'created_by').order_by('date', 'time')[:10]
-    
+
     # Get user's RSVP status for upcoming sessions
     user_rsvps = SessionRSVP.objects.filter(
         user=user,
         session__in=upcoming_sessions
     ).values_list('session_id', 'status')
     rsvp_dict = dict(user_rsvps)
-    
+
     # Get recommended groups (using smart recommendations)
     from recommendations.utils import calculate_recommendations
     recommendations_data = calculate_recommendations(user, limit=6)
     recommended_groups = [rec['group'] for rec in recommendations_data]
-    
+
     # Calculate statistics
     total_groups_joined = all_my_groups.count()
     total_groups_created = created_groups.count()
-    
+
     # Count sessions attended (RSVPs with 'attending' status)
     total_sessions_attended = SessionRSVP.objects.filter(
         user=user,
         status='attending'
     ).count()
-    
+
     # Count total sessions in user's groups
     total_sessions_scheduled = StudySession.objects.filter(
         group__in=all_my_groups
     ).count()
-    
+
     context = {
         'created_groups': created_groups[:5],  # Show max 5
         'joined_groups': joined_groups[:5],    # Show max 5
@@ -64,5 +64,5 @@ def dashboard(request):
         'total_sessions_attended': total_sessions_attended,
         'total_sessions_scheduled': total_sessions_scheduled,
     }
-    
+
     return render(request, 'dashboard/dashboard.html', context)

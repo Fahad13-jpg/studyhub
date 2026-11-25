@@ -4,6 +4,7 @@
 
 {% block title %}{{ profile_user.get_full_name|default:profile_user.username }} - Profile{% endblock %}
 
+{% block body_class %}workspace-page profile-screen{% endblock %}
 {% block content %}
 <style>
 .badge-mini-container {
@@ -17,33 +18,33 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--folio-sage-soft);
     color: white;
     font-size: 1.25rem;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    transition: background-color 160ms ease, border-color 160ms ease;
 }
 
 .badge-mini-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+
+    box-shadow: none;
 }
 
 /* Different badge colors */
 .badge-mini-icon:nth-child(2n) {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: var(--folio-sage-soft);
 }
 
 .badge-mini-icon:nth-child(3n) {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: var(--folio-sage-soft);
 }
 
 .badge-mini-icon:nth-child(4n) {
-    background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+    background: var(--folio-sage-soft);
 }
 
 .badge-mini-icon:nth-child(5n) {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: var(--folio-sage-soft);
 }
 </style>
 <div class="container mt-4 mb-5">
@@ -55,8 +56,8 @@
                     <!-- Profile Picture -->
                     <div class="mb-3">
                         {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" 
-                                 alt="{{ profile_user.username }}" 
+                            <img src="{{ profile.profile_picture.url }}"
+                                 alt="{{ profile_user.username }}"
                                  class="rounded-circle border border-3 border-primary"
                                  style="width: 150px; height: 150px; object-fit: cover;">
                         {% else %}
@@ -68,13 +69,13 @@
                     </div>
 
                     <!-- User Name -->
-                    <h3 class="fw-bold mb-1">{{ profile_user.get_full_name|default:profile_user.username }}</h3>
+                    <div class="workspace-heading"><h1>{{ profile_user.get_full_name|default:profile_user.username }}</h1><p>Your place in the commons.</p></div>
                     <p class="text-muted mb-3">@{{ profile_user.username }}</p>
 
                     <!-- Edit Profile Button (only for own profile) -->
                     {% if is_own_profile %}
                         <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary w-100 mb-2">
-                            <i class="fas fa-edit me-2"></i>Edit Profile
+                            <i aria-hidden="true" class="fas fa-edit me-2"></i>Edit Profile
                         </a>
                     {% endif %}
 
@@ -92,18 +93,18 @@
             <div class="card shadow-sm border-0 rounded-4 mt-3">
                 <div class="card-body">
                     <h5 class="card-title mb-3">
-                        <i class="fas fa-chart-line me-2 text-primary"></i>Statistics
+                        <i aria-hidden="true" class="fas fa-chart-line me-2 text-primary"></i>Statistics
                     </h5>
                     <div class="row text-center">
                         <div class="col-6 mb-3">
                             <div class="p-3 bg-light rounded-3">
-                                <h4 class="fw-bold text-primary mb-0">0</h4>
+                                <h4 class="fw-bold text-primary mb-0">{{ profile_user.joined_groups.count }}</h4>
                                 <small class="text-muted">Groups Joined</small>
                             </div>
                         </div>
                         <div class="col-6 mb-3">
                             <div class="p-3 bg-light rounded-3">
-                                <h4 class="fw-bold text-success mb-0">0</h4>
+                                <h4 class="fw-bold text-success mb-0">{{ profile_user.created_groups.count }}</h4>
                                 <small class="text-muted">Groups Created</small>
                             </div>
                         </div>
@@ -117,7 +118,7 @@
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-header bg-white border-0 py-3">
                     <h4 class="mb-0 fw-bold">
-                        <i class="fas fa-info-circle me-2 text-primary"></i>Profile Information
+                        <i aria-hidden="true" class="fas fa-info-circle me-2 text-primary"></i>Profile Information
                     </h4>
                 </div>
                 <div class="card-body p-4">
@@ -125,7 +126,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-envelope me-2"></i>Email
+                                    <i aria-hidden="true" class="fas fa-envelope me-2"></i>Email
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile_user.email|default:"Not provided" }}</p>
                             </div>
@@ -133,7 +134,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-phone me-2"></i>Phone
+                                    <i aria-hidden="true" class="fas fa-phone me-2"></i>Phone
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile.phone|default:"Not provided" }}</p>
                             </div>
@@ -143,14 +144,14 @@
                     <hr>
 
                     <h5 class="fw-bold mb-3 mt-4">
-                        <i class="fas fa-graduation-cap me-2 text-primary"></i>Academic Information
+                        <i aria-hidden="true" class="fas fa-graduation-cap me-2 text-primary"></i>Academic Information
                     </h5>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-university me-2"></i>University
+                                    <i aria-hidden="true" class="fas fa-university me-2"></i>University
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile.university|default:"Not provided" }}</p>
                             </div>
@@ -158,7 +159,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-building me-2"></i>Department
+                                    <i aria-hidden="true" class="fas fa-building me-2"></i>Department
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile.department|default:"Not provided" }}</p>
                             </div>
@@ -169,7 +170,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-calendar-alt me-2"></i>Current Semester
+                                    <i aria-hidden="true" class="fas fa-calendar-alt me-2"></i>Current Semester
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile.get_semester_display|default:"Not provided" }}</p>
                             </div>
@@ -177,7 +178,7 @@
                         <div class="col-md-6">
                             <div class="mb-4">
                                 <h6 class="text-muted small text-uppercase mb-2">
-                                    <i class="fas fa-user-graduate me-2"></i>Current Year
+                                    <i aria-hidden="true" class="fas fa-user-graduate me-2"></i>Current Year
                                 </h6>
                                 <p class="mb-0 fw-semibold">{{ profile.get_year_display|default:"Not provided" }}</p>
                             </div>
@@ -187,7 +188,7 @@
                     <hr>
 
                     <div class="text-muted small">
-                        <i class="fas fa-clock me-2"></i>Member since {{ profile.created_at|date:"F Y" }}
+                        <i aria-hidden="true" class="fas fa-clock me-2"></i>Member since {{ profile.created_at|date:"F Y" }}
                     </div>
                 </div>
             </div>
@@ -196,14 +197,14 @@
             <div class="card shadow-sm border-0 rounded-4 mt-4">
                 <div class="card-header bg-white border-0 py-3">
                     <h5 class="mb-0 fw-bold">
-                        <i class="fas fa-trophy me-2 text-warning"></i>Achievements
+                        <i aria-hidden="true" class="fas fa-trophy me-2 text-warning"></i>Achievements
                     </h5>
                 </div>
                 <div class="card-body">
                     {% if is_own_profile %}
                         {% get_user_badges profile_user as user_badges %}
                         {% get_user_points profile_user as user_points %}
-                        
+
                         <div class="row mb-3">
                             <div class="col-6 text-center">
                                 <h4 class="fw-bold text-primary">Level {{ user_points.level }}</h4>
@@ -214,33 +215,33 @@
                                 <small class="text-muted">Badges Earned</small>
                             </div>
                         </div>
-                        
+
                         {% if user_badges %}
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 {% for user_badge in user_badges %}
                                     <div class="badge-mini-container">
                                         <span class="badge-mini-icon" title="{{ user_badge.badge.name }}">
-                                            <i class="fas {{ user_badge.badge.icon }}"></i>
+                                            <i aria-hidden="true" class="fas {{ user_badge.badge.icon }}"></i>
                                         </span>
                                     </div>
                                 {% endfor %}
                             </div>
                             <div class="text-center mt-3">
                                 <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-outline-primary">
-                                    <i class="fas fa-trophy me-2"></i>View All Achievements
+                                    <i aria-hidden="true" class="fas fa-trophy me-2"></i>View All Achievements
                                 </a>
                             </div>
                         {% else %}
                             <p class="text-muted text-center mb-3">No badges earned yet. Start participating!</p>
                             <div class="text-center">
-                                <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-star me-2"></i>Earn Your First Badge
+                                <a href="{% url 'gamification:achievements' %}" class="btn btn-sm btn-secondary">
+                                    <i aria-hidden="true" class="fas fa-star me-2"></i>Earn Your First Badge
                                 </a>
                             </div>
                         {% endif %}
                     {% else %}
                         <div class="text-center py-3">
-                            <i class="fas fa-lock fa-2x text-muted mb-2"></i>
+
                             <p class="text-muted mb-0">Achievements are private</p>
                         </div>
                     {% endif %}
@@ -251,15 +252,15 @@
             <div class="card shadow-sm border-0 rounded-4 mt-4">
                 <div class="card-header bg-white border-0 py-3">
                     <h4 class="mb-0 fw-bold">
-                        <i class="fas fa-users me-2 text-primary"></i>Study Groups
+                        <i aria-hidden="true" class="fas fa-users me-2 text-primary"></i>Study Groups
                     </h4>
                 </div>
                 <div class="card-body text-center py-5">
-                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+
                     <p class="text-muted">No study groups yet. Join or create one to get started!</p>
                     {% if is_own_profile %}
                         <a href="{% url 'groups:browse_groups' %}" class="btn btn-outline-primary">
-                            <i class="fas fa-search me-2"></i>Browse Groups
+                            <i aria-hidden="true" class="fas fa-search me-2"></i>Browse Groups
                         </a>
                     {% endif %}
                 </div>
@@ -277,11 +278,11 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: background-color 160ms ease, border-color 160ms ease;
+    box-shadow: none;
 }
 .badge-mini-container:hover {
-    transform: scale(1.1);
+
 }
 .badge-mini-icon {
     color: #ffc107;

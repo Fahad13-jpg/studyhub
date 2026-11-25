@@ -30,7 +30,7 @@ class UserRegistrationForm(UserCreationForm):
             'placeholder': 'Last Name'
         })
     )
-    
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
@@ -40,7 +40,7 @@ class UserRegistrationForm(UserCreationForm):
                 'placeholder': 'Choose a username'
             })
         }
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs.update({
@@ -51,7 +51,18 @@ class UserRegistrationForm(UserCreationForm):
             'class': 'form-control',
             'placeholder': 'Confirm Password'
         })
-    
+
+        hints = {'username': 'username', 'first_name': 'given-name', 'last_name': 'family-name', 'email': 'email', 'password1': 'new-password', 'password2': 'new-password'}
+        labels = {'username': 'Username', 'first_name': 'First name', 'last_name': 'Last name', 'email': 'Email address', 'password1': 'Password', 'password2': 'Confirm password'}
+        for name, field in self.fields.items():
+            field.label = labels.get(name, field.label)
+            field.widget.attrs.update({'autocomplete': hints.get(name, 'off'), 'aria-describedby': f'id_{name}_hint id_{name}_errors'})
+        self.fields['username'].help_text = 'The name you’ll use to log in.'
+        self.fields['username'].widget.attrs.pop('autofocus', None)
+        self.fields['username'].widget.attrs['autocapitalize'] = 'none'
+        self.fields['username'].widget.attrs['spellcheck'] = 'false'
+        self.fields['password2'].help_text = ''
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
@@ -75,6 +86,14 @@ class UserLoginForm(AuthenticationForm):
             'placeholder': 'Password'
         })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'autocomplete': 'username' if name == 'username' else 'current-password', 'aria-describedby': f'id_{name}_hint id_{name}_errors'})
+        self.fields['username'].widget.attrs.update({'autocapitalize': 'none', 'spellcheck': 'false'})
+        self.fields['username'].widget.attrs.pop('autofocus', None)
+
 
 
 class UserProfileForm(forms.ModelForm):
@@ -125,7 +144,7 @@ class UserUpdateForm(forms.ModelForm):
             'class': 'form-control'
         })
     )
-    
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']
@@ -137,7 +156,7 @@ class UserUpdateForm(forms.ModelForm):
                 'class': 'form-control'
             })
         }
-    
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():

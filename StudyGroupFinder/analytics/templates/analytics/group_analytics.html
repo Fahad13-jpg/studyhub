@@ -2,22 +2,21 @@
 
 {% block title %}Analytics - {{ group.name }}{% endblock %}
 
+{% block body_class %}workspace-page analytics-screen{% endblock %}
 {% block content %}
 <div class="container mt-4 mb-5">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold">
-                <i class="fas fa-chart-line me-2 text-primary"></i>Analytics Dashboard
-            </h2>
+            <div class="workspace-heading"><h1>Your group at a glance</h1><p>Attendance, participation, and the rhythm of your group.</p></div>
             <p class="text-muted mb-0">{{ group.name }}</p>
         </div>
         <div class="d-flex gap-2">
             <a href="{% url 'groups:group_detail' group.pk %}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Back to Group
+                <i aria-hidden="true" class="fas fa-arrow-left me-2"></i>Back to Group
             </a>
             <a href="{% url 'analytics:refresh_analytics' group.pk %}" class="btn btn-primary">
-                <i class="fas fa-sync-alt me-2"></i>Refresh Data
+                <i aria-hidden="true" class="fas fa-sync-alt me-2"></i>Refresh Data
             </a>
         </div>
     </div>
@@ -27,11 +26,11 @@
         <div class="col-md-3 mb-3">
             <div class="card border-0 shadow-sm rounded-4 bg-gradient-primary text-white h-100">
                 <div class="card-body text-center p-4">
-                    <i class="fas fa-users fa-3x mb-3 opacity-75"></i>
+
                     <h3 class="fw-bold mb-2">{{ analytics.total_members }}</h3>
                     <p class="mb-0">Total Members</p>
                     <small class="opacity-75">
-                        <i class="fas fa-arrow-up me-1"></i>{{ analytics.member_growth_rate|floatformat:1 }}% growth
+                        <i aria-hidden="true" class="fas fa-arrow-up me-1"></i>{{ analytics.member_growth_rate|floatformat:1 }}% growth
                     </small>
                 </div>
             </div>
@@ -40,7 +39,7 @@
         <div class="col-md-3 mb-3">
             <div class="card border-0 shadow-sm rounded-4 bg-gradient-success text-white h-100">
                 <div class="card-body text-center p-4">
-                    <i class="fas fa-calendar-check fa-3x mb-3 opacity-75"></i>
+
                     <h3 class="fw-bold mb-2">{{ analytics.total_sessions }}</h3>
                     <p class="mb-0">Total Sessions</p>
                     <small class="opacity-75">{{ analytics.completed_sessions }} completed</small>
@@ -51,7 +50,7 @@
         <div class="col-md-3 mb-3">
             <div class="card border-0 shadow-sm rounded-4 bg-gradient-warning text-white h-100">
                 <div class="card-body text-center p-4">
-                    <i class="fas fa-percentage fa-3x mb-3 opacity-75"></i>
+
                     <h3 class="fw-bold mb-2">{{ analytics.average_attendance_rate|floatformat:1 }}%</h3>
                     <p class="mb-0">Avg Attendance</p>
                     <small class="opacity-75">Across all sessions</small>
@@ -62,7 +61,7 @@
         <div class="col-md-3 mb-3">
             <div class="card border-0 shadow-sm rounded-4 bg-gradient-info text-white h-100">
                 <div class="card-body text-center p-4">
-                    <i class="fas fa-fire fa-3x mb-3 opacity-75"></i>
+
                     <h3 class="fw-bold mb-2">{{ analytics.sessions_this_month }}</h3>
                     <p class="mb-0">This Month</p>
                     <small class="opacity-75">
@@ -82,7 +81,7 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-chart-line me-2 text-primary"></i>Attendance Trends</h5>
+                    <h5 class="mb-0 fw-bold"><i aria-hidden="true" class="fas fa-chart-line me-2 text-primary"></i>Attendance Trends</h5>
                 </div>
                 <div class="card-body"><canvas id="attendanceChart"></canvas></div>
             </div>
@@ -91,7 +90,7 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-calendar-alt me-2 text-success"></i>Session Frequency</h5>
+                    <h5 class="mb-0 fw-bold"><i aria-hidden="true" class="fas fa-calendar-alt me-2 text-success"></i>Session Frequency</h5>
                 </div>
                 <div class="card-body"><canvas id="sessionFrequencyChart"></canvas></div>
             </div>
@@ -102,7 +101,7 @@
         <div class="col-12">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-info"></i>Member Growth Over Time</h5>
+                    <h5 class="mb-0 fw-bold"><i aria-hidden="true" class="fas fa-users me-2 text-info"></i>Member Growth Over Time</h5>
                 </div>
                 <div class="card-body"><canvas id="memberGrowthChart"></canvas></div>
             </div>
@@ -114,14 +113,14 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-trophy me-2 text-warning"></i>Most Active Members</h5>
+                    <h5 class="mb-0 fw-bold"><i aria-hidden="true" class="fas fa-trophy me-2 text-warning"></i>Most Active Members</h5>
                 </div>
                 <div class="card-body">
                     {% for member_data in top_members %}
                         <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-3">
                             <div class="position-relative me-3">
                                 {% if member_data.user.profile.profile_picture %}
-                                    <img src="{{ member_data.user.profile.profile_picture.url }}" 
+                                    <img src="{{ member_data.user.profile.profile_picture.url }}"
                                          class="rounded-circle"
                                          style="width: 50px; height: 50px; object-fit: cover;">
                                 {% else %}
@@ -135,9 +134,9 @@
                             <div class="flex-grow-1">
                                 <h6 class="mb-1 fw-bold">{{ member_data.user.get_full_name }}</h6>
                                 <div class="d-flex gap-3 text-muted small">
-                                    <span><i class="fas fa-calendar-check me-1"></i>{{ member_data.sessions_attended }} attended</span>
-                                    <span><i class="fas fa-plus-circle me-1"></i>{{ member_data.sessions_created }} created</span>
-                                    <span><i class="fas fa-comments me-1"></i>{{ member_data.messages_sent }} messages</span>
+                                    <span><i aria-hidden="true" class="fas fa-calendar-check me-1"></i>{{ member_data.sessions_attended }} attended</span>
+                                    <span><i aria-hidden="true" class="fas fa-plus-circle me-1"></i>{{ member_data.sessions_created }} created</span>
+                                    <span><i aria-hidden="true" class="fas fa-comments me-1"></i>{{ member_data.messages_sent }} messages</span>
                                 </div>
                             </div>
                             <div class="text-end">
@@ -156,7 +155,7 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-list me-2 text-secondary"></i>All Members Activity</h5>
+                    <h5 class="mb-0 fw-bold"><i aria-hidden="true" class="fas fa-list me-2 text-secondary"></i>All Members Activity</h5>
                 </div>
                 <div class="card-body" style="max-height: 500px; overflow-y: auto;">
                     <div class="table-responsive">
@@ -176,7 +175,7 @@
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 {% if activity.user.profile.profile_picture %}
-                                                    <img src="{{ activity.user.profile.profile_picture.url }}" 
+                                                    <img src="{{ activity.user.profile.profile_picture.url }}"
                                                          class="rounded-circle me-2"
                                                          style="width: 30px; height: 30px; object-fit: cover;">
                                                 {% else %}
@@ -208,6 +207,8 @@
 
 <script>
     // ✅ Parse safely even if empty or null
+    Chart.defaults.font.family = 'Manrope, sans-serif';
+    Chart.defaults.color = '#62675D';
     const attendanceTrends = JSON.parse('{{ attendance_trends|escapejs }}' || '[]');
     const memberGrowth = JSON.parse('{{ member_growth|escapejs }}' || '[]');
     const sessionFrequency = JSON.parse('{{ session_frequency|escapejs }}' || '[]');
@@ -221,8 +222,8 @@
             datasets: [{
                 label: 'Attendance Rate (%)',
                 data: attendanceTrends.map(d => d.rate),
-                borderColor: 'rgb(102, 126, 234)',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                borderColor: '#40563F',
+                backgroundColor: 'rgba(156,175,136,0.2)',
                 tension: 0.4,
                 fill: true
             }]
@@ -239,8 +240,8 @@
             datasets: [{
                 label: 'Sessions',
                 data: sessionFrequency.map(d => d.count),
-                backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                borderColor: 'rgb(16, 185, 129)',
+                backgroundColor: '#9CAF88',
+                borderColor: '#40563F',
                 borderWidth: 2
             }]
         },
@@ -256,8 +257,8 @@
             datasets: [{
                 label: 'Total Members',
                 data: memberGrowth.map(d => d.count),
-                borderColor: 'rgb(79, 172, 254)',
-                backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                borderColor: '#62675D',
+                backgroundColor: 'rgba(98,103,93,0.1)',
                 tension: 0.4,
                 fill: true,
                 pointRadius: 5
@@ -268,9 +269,9 @@
 </script>
 
 <style>
-.bg-gradient-primary {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);}
-.bg-gradient-success {background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);}
-.bg-gradient-warning {background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);}
-.bg-gradient-info {background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);}
+.bg-gradient-primary {background: var(--folio-sage-soft);}
+.bg-gradient-success {background: var(--folio-sage-soft);}
+.bg-gradient-warning {background: var(--folio-sage-soft);}
+.bg-gradient-info {background: var(--folio-sage-soft);}
 </style>
 {% endblock %}

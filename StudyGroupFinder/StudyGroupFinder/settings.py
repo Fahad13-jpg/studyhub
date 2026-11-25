@@ -38,9 +38,9 @@ DEBUG = os.getenv('DEBUG', 'False') == 'False'
 # Allowed Hosts
 # ------------------------------------------------------------------
 ALLOWED_HOSTS = [
-    '.vercel.app', 
-    '.now.sh', 
-    'localhost', 
+    '.vercel.app',
+    '.now.sh',
+    'localhost',
     '127.0.0.1',
     'study-group-finder-ousigqysn-fahad13-jpgs-projects.vercel.app'
 ]
@@ -170,6 +170,7 @@ USE_TZ = True
 # ------------------------------------------------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'

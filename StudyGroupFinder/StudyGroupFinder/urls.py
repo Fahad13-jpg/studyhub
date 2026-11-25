@@ -19,13 +19,14 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.shortcuts import redirect
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
     path('lead-gen/', include('StudyGroupFinder.lead_gen_policy_urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
-    path('', lambda request: redirect('dashboard:dashboard')),  # Redirect root to dashboard
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('dashboard/', include('dashboard.urls')),
     path('groups/', include('groups.urls')),
     path('user_sessions/', include('user_sessions.urls')),
