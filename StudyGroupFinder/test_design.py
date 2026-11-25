@@ -6,6 +6,10 @@ from django.urls import reverse
 from groups.models import StudyGroup, GroupMember
 from user_sessions.models import StudySession
 from notifications.models import NotificationPreference
+from django.conf import settings
+import glob
+import json
+from pathlib import Path
 
 
 @override_settings(DEBUG=True, DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage', PASSWORD_HASHERS=['django.contrib.auth.hashers.MD5PasswordHasher'])
@@ -61,3 +65,13 @@ class DesignScreensTests(TestCase):
         self.assertTrue(prefs.email_session_reminders)
         self.assertTrue(prefs.inapp_session_updates)
         self.assertFalse(prefs.email_new_members)
+
+    def test_vercel_includes_application_static_assets(self):
+        config = json.loads((settings.BASE_DIR / 'vercel.json').read_text())
+        published = set()
+        for builder in config['builds']:
+            if builder['use'] == '@vercel/static':
+                published.update(Path(path).resolve() for path in glob.glob(str(settings.BASE_DIR / builder['src']), recursive=True))
+        for asset in ['home.css', 'folio.css', 'workspace.css', 'auth.css', 'slider.js', 'mark.svg', 'study-table.webp', 'manrope.ttf']:
+            with self.subTest(asset=asset):
+                self.assertIn((settings.BASE_DIR / 'static' / 'folio' / asset).resolve(), published)
