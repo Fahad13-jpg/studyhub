@@ -21,11 +21,11 @@ typography:
     lineHeight: 1.2
     letterSpacing: "-.025em"
   body:
-    fontFamily: "Segoe UI, sans-serif"
+    fontFamily: "Manrope, Segoe UI, sans-serif"
     fontSize: "1rem"
     lineHeight: 1.6
   label:
-    fontFamily: "Segoe UI, sans-serif"
+    fontFamily: "Manrope, Segoe UI, sans-serif"
     fontSize: ".875rem"
     fontWeight: 500
 rounded:
@@ -70,7 +70,7 @@ Sage supplies the brand mark and small bookmark detail. Sage-soft supports secon
 
 ## Typography
 
-Newsreader is self-hosted as `newsreader.ttf`, with `OFL.txt` alongside it. Its variable font declaration covers weights 200–800 and uses `font-display: swap`. Newsreader with Georgia fallback is used for h1 and h2. Segoe UI with sans-serif fallback handles body copy, navigation, forms and smaller headings.
+Newsreader is self-hosted as `newsreader.woff2`, with `OFL.txt` alongside it. Its variable font declaration covers weights 200â€“800 and uses `font-display: swap`. Newsreader with Georgia fallback is used for h1 and h2. Manrope with Segoe UI and sans-serif fallbacks handles body copy, navigation, forms and smaller headings.
 
 General h1 uses the display token; h2 is `clamp(2rem, 3vw, 2.75rem)`. The auth story overrides h1 to `clamp(3rem, 5vw, 4.25rem)` with line-height 1.04; below 768px it becomes 2.25rem/1.12. Auth form h2 is 2.25rem, then 1.75rem on mobile. Body text is 1rem/1.6; labels and navigation are .875rem. Dashboard counts use tabular numerals. Keep headings balanced and prose readable rather than densely decorated.
 
@@ -119,7 +119,7 @@ The header uses a serif Folio wordmark and compact Commons label, an open-book m
 
 
 ### Homepage image carousel and type
-Four WebP photographs crossfade in the existing hero, with quiet direct selectors and previous/pause/next controls. Autoplay is 6.5 seconds, suspended offscreen/hidden/on hover, stopped by manual interaction or keyboard focus, and initially off under reduced motion. The fixed image region prevents layout shift. Homepage body and labels now use self-hosted Manrope, with Newsreader display headings at variable weight 450; the application screens retain their existing sans stack. All homepage arrows are authored SVGs at 18–20px with 1.6px round strokes. Tomato primary actions use a small circular arrow area; secondary links stay quiet.
+Four WebP photographs crossfade in the existing hero, with quiet direct selectors and previous/pause/next controls. Autoplay is 6.5 seconds, suspended offscreen/hidden/on hover, stopped by manual interaction or keyboard focus, and initially off under reduced motion. The fixed image region prevents layout shift. Homepage body and labels now use self-hosted Manrope, with Newsreader display headings at variable weight 450; the application screens retain their existing sans stack. All homepage arrows are authored SVGs at 18â€“20px with 1.6px round strokes. Tomato primary actions use a small circular arrow area; secondary links stay quiet.
 
 
 ### Account pages
@@ -133,3 +133,7 @@ Account screens use a compact logo header with a soft sage account-switch action
 ### Student workspace surfaces
 All student application routes share workspace.css and workspace.js: Manrope controls/body, Newsreader headings, paper cards with sage section headers, restrained status badges, and tomato primary create/save actions. Dashboard uses desk.css for its sage welcome panel, ruled statistics and agenda/group lists. Discovery, group detail and sessions preserve their existing actions and data. Shared forms use a two-column field grid, full-width long inputs and textareas, inline validation, and a guidance column that moves below forms on phones. Notification preferences show a ten-control email/in-app matrix. Chat uses a compact header, measured message bubbles, labeled composer and accessible initials when photos fail. Analytics charts inherit Manrope and sage/ink data colors. Achievements use real within-level progress. Responsive checks found no horizontal document overflow across the 17 application screens at 390px.
 
+
+## Typography refinement
+
+The final refinements.css establishes 16px reading copy, 14px interface labels, 13px supporting metadata and 12px compact captions. Editorial headings retain Newsreader with lighter optical weights. Self-hosted WOFF2 font files preserve all glyphs and variable axes, reducing their combined payload from 616,364 to 268,988 bytes. Font preloads begin both downloads early. Mobile layouts were checked at 390px across the homepage, both auth screens and all 17 app screens without document overflow.

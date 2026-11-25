@@ -72,6 +72,6 @@ class DesignScreensTests(TestCase):
         for builder in config['builds']:
             if builder['use'] == '@vercel/static':
                 published.update(Path(path).resolve() for path in glob.glob(str(settings.BASE_DIR / builder['src']), recursive=True))
-        for asset in ['home.css', 'folio.css', 'workspace.css', 'auth.css', 'slider.js', 'mark.svg', 'study-table.webp', 'manrope.ttf']:
+        for asset in ['home.css', 'folio.css', 'workspace.css', 'auth.css', 'slider.js', 'mark.svg', 'study-table.webp', 'manrope.ttf', 'manrope.woff2', 'newsreader.woff2', 'refinements.css']:
             with self.subTest(asset=asset):
                 self.assertIn((settings.BASE_DIR / 'static' / 'folio' / asset).resolve(), published)
